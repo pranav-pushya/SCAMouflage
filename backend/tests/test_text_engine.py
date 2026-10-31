@@ -5,6 +5,7 @@ and robustness without network dependencies.
 """
 
 import os
+from unittest.mock import patch
 import pandas as pd
 import pytest
 
@@ -204,3 +205,41 @@ def test_prompt_injection_safety():
     assert res["score"] >= 40
     flag_codes = [f["code"] for f in res["flags"]]
     assert "KYC_UPDATE" in flag_codes
+
+
+def test_text_ml_model_scoring_and_meta():
+    """Trained ML model provides probability and rules_score in metadata."""
+    res = analyze_text("Urgent: Your bank account will be blocked today. Click here to verify.")
+    assert "meta" in res
+    assert "ml_probability" in res["meta"]
+    assert res["meta"]["ml_probability"] is not None
+    assert 0.0 <= res["meta"]["ml_probability"] <= 1.0
+    assert "rules_score" in res["meta"]
+    assert isinstance(res["meta"]["rules_score"], int)
+
+
+def test_groq_tactics_graceful_fallback_when_offline():
+    """Engine operates smoothly on ML + rules when Groq API key is missing or call fails."""
+    with patch("engines.text_engine.extract_tactics", return_value=None):
+        res = analyze_text("Priye grahak, aapka bijli connection kaat diya jayega.")
+    assert res["score"] is not None
+    assert res["score"] > 0
+    assert res["meta"]["groq_tactics"] == []
+
+
+def test_groq_tactics_flag_added_when_scam_detected():
+    """When Groq returns high-confidence tactics, AI_TACTIC_DETECTED is included in flags."""
+    mock_groq_res = {
+        "is_scam": True,
+        "confidence": 0.95,
+        "tactics": ["fear_threat", "authority"],
+        "explanation": "CBI arrest ka dar dikha kar paise maang rahe hain",
+    }
+    with patch("engines.text_engine.extract_tactics", return_value=mock_groq_res):
+        res = analyze_text("CBI notice: Digital arrest order issued. Call immediately.")
+
+    codes = [f["code"] for f in res["flags"]]
+    assert "AI_TACTIC_DETECTED" in codes
+    tactic_flag = next(f for f in res["flags"] if f["code"] == "AI_TACTIC_DETECTED")
+    assert "CBI arrest" in tactic_flag["reason"]
+    assert "fear_threat" in res["meta"]["groq_tactics"]

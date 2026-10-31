@@ -80,8 +80,8 @@ TEXT_RULES: List[Dict[str, Any]] = [
         "reason": "Bijli connection kaatne ki farzi warning di gayi hai",
         "patterns": [
             r"\b(?:electricity|power|bijli)\s*(?:power|connection|supply)?\s*(?:will\s*be|is)\s*(?:disconnected|cut\s*off|terminated|suspended)\b",
-            r"\bbijli\s*(?:kat\s*jayegi|band\s*ho\s*jayegi|kat\s*di\s*jayegi|katenge)\b",
-            r"\bbijli\s*connection\s*(?:kat|band)\b",
+            r"\bbijli\s*(?:ka?at\s*jayegi|band\s*ho\s*jayegi|ka?at\s*di\s*jayegi|ka?atenge)\b",
+            r"\bbijli\s*connection\s*(?:ka?at|band)\b",
             r"\bunpaid\s*(?:electricity\s*)?bill\b",
             r"\baaj\s*raat\s*(?:9|10|11|12)?\s*(?:baje\s*)?bijli\s*kat\b",
             r"\bbijli\s*kat\s*diti\s*javegi\b",

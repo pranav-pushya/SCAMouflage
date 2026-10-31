@@ -1,28 +1,487 @@
 [
   {
-    "_comment": "TEMPORARY, to be replaced by teammate real dataset",
     "name": "SBI",
-    "official_domains": ["sbi.co.in", "onlinesbi.sbi"],
-    "keywords": ["sbi", "onlinesbi"]
+    "official_domains": [
+      "bank.sbi",
+      "sbi.bank.in",
+      "sbi.co.in",
+      "onlinesbi.sbi",
+      "onlinesbi.com"
+    ],
+    "keywords": [
+      "sbi",
+      "onlinesbi",
+      "yonosbi",
+      "statebankofindia",
+      "yono"
+    ]
   },
   {
     "name": "HDFC Bank",
-    "official_domains": ["hdfcbank.com"],
-    "keywords": ["hdfc", "hdfcbank"]
+    "official_domains": [
+      "hdfc.bank.in",
+      "hdfcbank.com",
+      "hdfc.com",
+      "hdfcbank.bank.in"
+    ],
+    "keywords": [
+      "hdfc",
+      "hdfcbank",
+      "hdfcnetbanking"
+    ]
   },
   {
     "name": "ICICI Bank",
-    "official_domains": ["icicibank.com"],
-    "keywords": ["icici", "icicibank"]
+    "official_domains": [
+      "icici.bank.in",
+      "icicibank.com",
+      "icicibank.bank.in"
+    ],
+    "keywords": [
+      "icici",
+      "icicibank",
+      "imobile",
+      "icicinetbanking"
+    ]
+  },
+  {
+    "name": "Axis Bank",
+    "official_domains": [
+      "axis.bank.in",
+      "axisbank.com",
+      "axisbank.bank.in"
+    ],
+    "keywords": [
+      "axis",
+      "axisbank",
+      "axisnetbanking"
+    ]
+  },
+  {
+    "name": "PNB",
+    "official_domains": [
+      "pnb.bank.in",
+      "pnbindia.in",
+      "netpnb.com"
+    ],
+    "keywords": [
+      "pnb",
+      "pnbindia",
+      "pnbnetbanking",
+      "punjabnationalbank"
+    ]
+  },
+  {
+    "name": "Kotak Mahindra Bank",
+    "official_domains": [
+      "kotak.bank.in",
+      "kotak.com"
+    ],
+    "keywords": [
+      "kotak",
+      "kotakbank",
+      "kotak811",
+      "kotaknetbanking"
+    ]
+  },
+  {
+    "name": "Bank of Baroda",
+    "official_domains": [
+      "bankofbaroda.bank.in",
+      "bankofbaroda.in",
+      "bobibanking.com"
+    ],
+    "keywords": [
+      "bankofbaroda",
+      "bobworld",
+      "bobibanking"
+    ]
   },
   {
     "name": "Paytm",
-    "official_domains": ["paytm.com"],
-    "keywords": ["paytm", "paytmbank"]
+    "official_domains": [
+      "paytm.com",
+      "paytmbank.com",
+      "paytm.bank.in"
+    ],
+    "keywords": [
+      "paytm",
+      "paytmbank",
+      "paytmpayments",
+      "paytmwallet"
+    ]
+  },
+  {
+    "name": "PhonePe",
+    "official_domains": [
+      "phonepe.com"
+    ],
+    "keywords": [
+      "phonepe",
+      "phonepebusiness"
+    ]
+  },
+  {
+    "name": "Google Pay",
+    "official_domains": [
+      "pay.google.com"
+    ],
+    "keywords": [
+      "googlepay",
+      "gpay",
+      "tez"
+    ]
+  },
+  {
+    "name": "BHIM",
+    "official_domains": [
+      "bhimupi.org.in",
+      "bhim.org.in"
+    ],
+    "keywords": [
+      "bhim",
+      "bhimupi",
+      "npci"
+    ]
+  },
+  {
+    "name": "CRED",
+    "official_domains": [
+      "cred.club",
+      "cred.in"
+    ],
+    "keywords": [
+      "cred",
+      "credclub"
+    ]
+  },
+  {
+    "name": "MobiKwik",
+    "official_domains": [
+      "mobikwik.com"
+    ],
+    "keywords": [
+      "mobikwik",
+      "zipemi",
+      "mobikwikwallet"
+    ]
+  },
+  {
+    "name": "Razorpay",
+    "official_domains": [
+      "razorpay.com",
+      "razorpay.me"
+    ],
+    "keywords": [
+      "razorpay",
+      "razorpayx"
+    ]
   },
   {
     "name": "India Post",
-    "official_domains": ["indiapost.gov.in"],
-    "keywords": ["indiapost", "indiapostpayments"]
+    "official_domains": [
+      "indiapost.gov.in",
+      "ippbonline.com",
+      "ippbonline.bank.in"
+    ],
+    "keywords": [
+      "indiapost",
+      "speedpost",
+      "ippb"
+    ]
+  },
+  {
+    "name": "Income Tax Department",
+    "official_domains": [
+      "incometax.gov.in",
+      "incometaxindia.gov.in",
+      "incometaxindiaefiling.gov.in"
+    ],
+    "keywords": [
+      "incometax",
+      "incometaxindia",
+      "incometaxefiling",
+      "itr"
+    ]
+  },
+  {
+    "name": "UIDAI",
+    "official_domains": [
+      "uidai.gov.in"
+    ],
+    "keywords": [
+      "uidai",
+      "aadhaar",
+      "myaadhaar",
+      "eaadhaar"
+    ]
+  },
+  {
+    "name": "EPFO",
+    "official_domains": [
+      "epfindia.gov.in"
+    ],
+    "keywords": [
+      "epfo",
+      "epfindia",
+      "epfpassbook",
+      "uanmember",
+      "memberesewa"
+    ]
+  },
+  {
+    "name": "IRCTC",
+    "official_domains": [
+      "irctc.co.in",
+      "irctc.com",
+      "irctctourism.com"
+    ],
+    "keywords": [
+      "irctc",
+      "irctctourism",
+      "irctctrain"
+    ]
+  },
+  {
+    "name": "NHAI",
+    "official_domains": [
+      "nhai.gov.in"
+    ],
+    "keywords": [
+      "nhai",
+      "rajmargyatra"
+    ]
+  },
+  {
+    "name": "FASTag",
+    "official_domains": [
+      "ihmcl.co.in",
+      "netc.org.in"
+    ],
+    "keywords": [
+      "fastag",
+      "ihmcl",
+      "netc",
+      "fastagkyc",
+      "fastagrecharge"
+    ]
+  },
+  {
+    "name": "Jio",
+    "official_domains": [
+      "jio.com"
+    ],
+    "keywords": [
+      "jio",
+      "myjio",
+      "jiotv",
+      "jiofiber",
+      "jiocinema"
+    ]
+  },
+  {
+    "name": "Airtel",
+    "official_domains": [
+      "airtel.in",
+      "airtel.com",
+      "airtelpayments.bank.in"
+    ],
+    "keywords": [
+      "airtel",
+      "airtelthanks",
+      "airtelpayment",
+      "airtelpaymentsbank"
+    ]
+  },
+  {
+    "name": "Vi",
+    "official_domains": [
+      "myvi.in",
+      "vodafoneidea.com"
+    ],
+    "keywords": [
+      "myvi",
+      "vodafoneidea",
+      "vodafone",
+      "ideacellular"
+    ]
+  },
+  {
+    "name": "Amazon",
+    "official_domains": [
+      "amazon.in",
+      "amazon.com",
+      "amazonpay.in"
+    ],
+    "keywords": [
+      "amazon",
+      "amazonin",
+      "amazonpay",
+      "amazondelivery"
+    ]
+  },
+  {
+    "name": "Flipkart",
+    "official_domains": [
+      "flipkart.com",
+      "flipkart.in"
+    ],
+    "keywords": [
+      "flipkart",
+      "flipkartplus",
+      "supercoins"
+    ]
+  },
+  {
+    "name": "Meesho",
+    "official_domains": [
+      "meesho.com",
+      "meesho.io"
+    ],
+    "keywords": [
+      "meesho",
+      "meeshosupplier"
+    ]
+  },
+  {
+    "name": "Myntra",
+    "official_domains": [
+      "myntra.com"
+    ],
+    "keywords": [
+      "myntra",
+      "myntrainsider"
+    ]
+  },
+  {
+    "name": "JioMart",
+    "official_domains": [
+      "jiomart.com"
+    ],
+    "keywords": [
+      "jiomart",
+      "jiomartgrocery"
+    ]
+  },
+  {
+    "name": "Blue Dart",
+    "official_domains": [
+      "bluedart.com"
+    ],
+    "keywords": [
+      "bluedart",
+      "trackdart"
+    ]
+  },
+  {
+    "name": "Delhivery",
+    "official_domains": [
+      "delhivery.com"
+    ],
+    "keywords": [
+      "delhivery",
+      "delhiverydirect",
+      "delhiveryexpress"
+    ]
+  },
+  {
+    "name": "DTDC",
+    "official_domains": [
+      "dtdc.com",
+      "dtdc.in"
+    ],
+    "keywords": [
+      "dtdc",
+      "dtdctracking",
+      "dtdcexpress"
+    ]
+  },
+  {
+    "name": "LIC",
+    "official_domains": [
+      "licindia.in"
+    ],
+    "keywords": [
+      "lic",
+      "licindia",
+      "licpolicy",
+      "licpremium"
+    ]
+  },
+  {
+    "name": "HDFC Life",
+    "official_domains": [
+      "hdfclife.com"
+    ],
+    "keywords": [
+      "hdfclife",
+      "hdfclifeinsurance"
+    ]
+  },
+  {
+    "name": "ICICI Prudential",
+    "official_domains": [
+      "iciciprulife.com",
+      "icicilife.com"
+    ],
+    "keywords": [
+      "iciciprulife",
+      "icicilife",
+      "iciciprudential"
+    ]
+  },
+  {
+    "name": "SBI Life",
+    "official_domains": [
+      "sbilife.co.in"
+    ],
+    "keywords": [
+      "sbilife",
+      "sbilifeinsurance"
+    ]
+  },
+  {
+    "name": "DigiLocker",
+    "official_domains": [
+      "digilocker.gov.in"
+    ],
+    "keywords": [
+      "digilocker",
+      "meity"
+    ]
+  },
+  {
+    "name": "Zerodha",
+    "official_domains": [
+      "zerodha.com"
+    ],
+    "keywords": [
+      "zerodha",
+      "kitezerodha",
+      "coinzerodha"
+    ]
+  },
+  {
+    "name": "Groww",
+    "official_domains": [
+      "groww.in"
+    ],
+    "keywords": [
+      "groww",
+      "growwinvest"
+    ]
+  },
+  {
+    "name": "Tata Neu",
+    "official_domains": [
+      "tataneu.com",
+      "tatadigital.com"
+    ],
+    "keywords": [
+      "tataneu",
+      "tatadigital",
+      "neupass",
+      "neucoins"
+    ]
   }
 ]
