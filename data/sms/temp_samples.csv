@@ -1,0 +1,33 @@
+text,label,category,style,source
+"Dear Customer, your SBI account KYC is pending. Update immediately at hxxp://fake-sbi-kyc.xyz or call 9876543210 to avoid deactivation.",scam,KYC_UPDATE,English,synthetic_agent_TEMPORARY
+"Priye grahak, aapka khata kyc update na hone ke karan aaj band ho jayega. Turant kyc karwayen link: hxxp://kyc-bank-portal.xyz",scam,KYC_UPDATE,Hinglish,synthetic_agent_TEMPORARY
+"Alert: Your HDFC Bank debit card has been blocked due to suspicious activity. Visit hxxp://hdfc-unblock.xyz within 24 hours.",scam,ACCOUNT_BLOCK_THREAT,English,synthetic_agent_TEMPORARY
+"Khatte nu block hon toh bachaun layi turant call karo 9812345678 te kyc update karvao.",scam,ACCOUNT_BLOCK_THREAT,Romanized_Punjabi,synthetic_agent_TEMPORARY
+"CBI & Cyber Crime Department: A parcel containing illegal drugs has been intercepted in your name. Stay on video call or digital arrest warrant will be issued.",scam,DIGITAL_ARREST,English,synthetic_agent_TEMPORARY
+"Police case registered at Delhi Cyber Crime Cell. Aapke khilaf arrest warrant jari hua hai. Turant Skype call par judo 9898989898.",scam,DIGITAL_ARREST,Hinglish,synthetic_agent_TEMPORARY
+"India Post Notice: Your consignment is held at customs clearance due to unpaid duty of Rs 48. Pay at hxxp://indiapost-customs.xyz",scam,COURIER_CUSTOMS,English,synthetic_agent_TEMPORARY
+"Aapka parcel delivery address galat hone se ruka hua hai. Address update karein aur customs fee bharein hxxp://courier-track.xyz",scam,COURIER_CUSTOMS,Hinglish,synthetic_agent_TEMPORARY
+"Dear user, your FASTag account is blacklisted due to incomplete KYC. Update fastag kyc at hxxp://fastag-help.xyz to avoid toll penalty.",scam,FASTAG,English,synthetic_agent_TEMPORARY
+"Aapka FASTag band ho gaya hai. Toll par rukawat se bachne ke liye turant recharge karein aur call karein 9876501234.",scam,FASTAG,Hinglish,synthetic_agent_TEMPORARY
+"Urgent Notice: Electricity power will be disconnected tonight at 9:30 PM due to unpaid bill. Contact electricity officer at 9823456789.",scam,ELECTRICITY_DISCONNECT,English,synthetic_agent_TEMPORARY
+"Bijli vibhag: Aaj raat 10 baje aapki bijli kat di jayegi kyunki bill jama nahi hua hai. Sampark karein 9871234567.",scam,ELECTRICITY_DISCONNECT,Hinglish,synthetic_agent_TEMPORARY
+"Aj raat bijli kat diti javegi bill jama na hon karke. Turant call karo 9834567890.",scam,ELECTRICITY_DISCONNECT,Romanized_Punjabi,synthetic_agent_TEMPORARY
+"Income Tax Alert: Link PAN with Aadhaar card mandatory today or your PAN will be deactivated. Update here hxxp://pan-link-portal.xyz",scam,AADHAAR_PAN_UPDATE,English,synthetic_agent_TEMPORARY
+"Priye grahak, pan aadhaar link karein warna aapka bank khata freeze ho jayega. Click hxxp://it-pan-update.xyz",scam,AADHAAR_PAN_UPDATE,Hinglish,synthetic_agent_TEMPORARY
+"Congratulations! Your mobile number won Rs 25 Lakh in KBC Lucky Draw 2026. Contact lottery manager WhatsApp at 9845678901.",scam,LOTTERY_KBC,English,synthetic_agent_TEMPORARY
+"Badhai ho! Aapne Tata Harrier gadi aur 25 lakh inami rashi jita hai KBC lottery me. Claim karne ke liye call karein 9856789012.",scam,LOTTERY_KBC,Hinglish,synthetic_agent_TEMPORARY
+"Work from home part-time job: Earn Rs 3000 to 5000 per day by YouTube like and subscribe tasks. Join our Telegram channel hxxp://t.me/fakejob",scam,JOB_TASK,English,synthetic_agent_TEMPORARY
+"Instant loan approved up to Rs 5,00,000 with no cibil and zero paperwork. Bina document turant loan pao direct khate me hxxp://instant-loan.xyz",scam,LOAN_APP,Hinglish,synthetic_agent_TEMPORARY
+"Bank security team: A transaction of Rs 10,000 is requested. To cancel, please tell your OTP to customer care executive on 9867890123 immediately.",scam,OTP_REQUEST,English,synthetic_agent_TEMPORARY
+"458921 is your secret OTP for transaction of Rs 1,450.00 at Flipkart. Do NOT share OTP with anyone, including bank staff.",legit,TRANSACTION_OTP,English,synthetic_agent_TEMPORARY
+"Aapka login OTP hai 892301. Kisi ke saath share na karein. Valid for 10 mins. - State Bank of India",legit,LOGIN_OTP,Hinglish,synthetic_agent_TEMPORARY
+"Dear Customer, your A/C ending 4502 is debited for Rs 2,500.00 on 31-Oct-26 via UPI Ref 623910. - HDFC Bank",legit,TRANSACTION_ALERT,English,synthetic_agent_TEMPORARY
+"Dear Customer, your Account ending 8812 is credited with INR 35,000.00 on 31-Oct-26 towards Salary. - ICICI Bank",legit,TRANSACTION_ALERT,English,synthetic_agent_TEMPORARY
+"Your Amazon order #402-9102-192 has been dispatched and will arrive tomorrow. Track at https://amazon.in/orders",legit,DELIVERY_ALERT,English,synthetic_agent_TEMPORARY
+"PNR 2849102847 Train 12952 NDLS RAJDHANI confirmed. Coach B3 Berth 24. Charting completed. Happy journey - IRCTC",legit,TRAVEL_TICKET,English,synthetic_agent_TEMPORARY
+"Thank you for payment of Rs 1,840 against electricity consumer ID 1092834. Receipt generated successfully. - BSES",legit,BILL_RECEIPT,English,synthetic_agent_TEMPORARY
+"Dear Airtel customer, your recharge of Rs 299 with 1.5GB/day is successful and valid till 28-Nov-2026. Dial 121 for details.",legit,TELECOM_ALERT,English,synthetic_agent_TEMPORARY
+"901243 is your one time password to login to your Swiggy account. Valid for 5 minutes. Do not share.",legit,LOGIN_OTP,English,synthetic_agent_TEMPORARY
+"Reminder: You have an appointment with Dr. Sharma tomorrow at 11:30 AM at Apollo Clinic. Please arrive 10 minutes early.",legit,APPOINTMENT,English,synthetic_agent_TEMPORARY
+"Dear parents, school will remain closed tomorrow on account of public holiday. Online classes will resume Monday. - DPS School",legit,SCHOOL_NOTICE,English,synthetic_agent_TEMPORARY
+"Haan bhai main nikal gaya ghar se, 15 minute me metro station pe milte hain. Chai wahi piyenge.",legit,PERSONAL,Hinglish,synthetic_agent_TEMPORARY

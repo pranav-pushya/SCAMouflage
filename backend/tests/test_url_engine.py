@@ -52,18 +52,23 @@ def test_official_domain_guard_subdomain():
 
 
 def test_sbi_spoofed_domains_not_treated_as_official():
-    """sbi.co.in.evil.xyz and evilsbi.co.in must NEVER be protected by official domain guard."""
+    """sbi.co.in.evil.xyz and spoofed domains must NEVER be protected by official domain guard."""
     # Subdomain spoof on third-party registered domain
     res_sub = analyze_url("http://sbi.co.in.evil.xyz")
     assert res_sub["score"] > 10
     assert any(f["code"] == "BRAND_LOOKALIKE" for f in res_sub["flags"])
     assert res_sub["meta"]["registered_domain"] == "evil.xyz"
 
-    # Prefix spoof on legitimate TLD
-    res_pre = analyze_url("http://evilsbi.co.in")
+    # Tokenized spoof on legitimate TLD (respects < 4 char token boundary rule)
+    res_pre = analyze_url("http://sbi-login.co.in")
     assert res_pre["score"] > 10
     assert any(f["code"] == "BRAND_LOOKALIKE" for f in res_pre["flags"])
-    assert res_pre["meta"]["registered_domain"] == "evilsbi.co.in"
+    assert res_pre["meta"]["registered_domain"] == "sbi-login.co.in"
+
+    # Non-tokenized domain is not protected by official guard
+    res_unauth = analyze_url("http://evilsbi.co.in")
+    assert res_unauth["meta"]["registered_domain"] == "evilsbi.co.in"
+    assert res_unauth["meta"]["registered_domain"] not in ["sbi.co.in", "onlinesbi.sbi"]
 
 
 # ---------------------------------------------------------------------------
@@ -402,3 +407,97 @@ def test_extract_features_pure_and_no_network():
     # Path features must not be present
     assert "path_length" not in feats
     assert "query_length" not in feats
+
+
+# ---------------------------------------------------------------------------
+# 13. Two-tier brand detection and latency budget
+# ---------------------------------------------------------------------------
+
+def test_two_tier_brand_lookalike_and_brand_in_domain():
+    """Verify tier 1 (BRAND_LOOKALIKE) vs tier 2 (BRAND_IN_DOMAIN) and short token rule."""
+    # 1. Tier 1: brand token + phishing keyword -> BRAND_LOOKALIKE, score >= 70
+    res_sbi_kyc = analyze_url("http://sbi-kyc-update.xyz")
+    codes_sbi_kyc = [f["code"] for f in res_sbi_kyc["flags"]]
+    assert "BRAND_LOOKALIKE" in codes_sbi_kyc
+    assert res_sbi_kyc["score"] >= 70
+
+    res_onlinesbi_kyc = analyze_url("http://onlinesbi-kyc.xyz")
+    codes_onlinesbi_kyc = [f["code"] for f in res_onlinesbi_kyc["flags"]]
+    assert "BRAND_LOOKALIKE" in codes_onlinesbi_kyc
+    assert res_onlinesbi_kyc["score"] >= 70
+
+    # 2. Tier 1: brand in subdomain labels while registered domain is different -> strongly flagged
+    res_sub = analyze_url("http://sbi.co.in.evil.xyz")
+    codes_sub = [f["code"] for f in res_sub["flags"]]
+    assert "BRAND_LOOKALIKE" in codes_sub
+    assert res_sub["score"] >= 70
+    assert res_sub["meta"]["registered_domain"] == "evil.xyz"
+
+    # 3. Tier 2: brand >= 4 chars as substring in larger word without phishing triggers -> at most BRAND_IN_DOMAIN, score <= 25
+    res_hdfc = analyze_url("http://hdfclife.com")
+    codes_hdfc = [f["code"] for f in res_hdfc["flags"]]
+    assert "BRAND_LOOKALIKE" not in codes_hdfc
+    assert "BRAND_IN_DOMAIN" in codes_hdfc
+    assert res_hdfc["score"] <= 25
+    hdfc_flag = next(f for f in res_hdfc["flags"] if f["code"] == "BRAND_IN_DOMAIN")
+    assert "Domain name me HDFC Bank shamil hai" in hdfc_flag["reason"]
+    assert len(hdfc_flag["reason"]) <= 80
+
+    res_paytm = analyze_url("http://paytmmall.com")
+    codes_paytm = [f["code"] for f in res_paytm["flags"]]
+    assert "BRAND_LOOKALIKE" not in codes_paytm
+    assert "BRAND_IN_DOMAIN" in codes_paytm
+    assert res_paytm["score"] <= 25
+    paytm_flag = next(f for f in res_paytm["flags"] if f["code"] == "BRAND_IN_DOMAIN")
+    assert "Domain name me Paytm shamil hai" in paytm_flag["reason"]
+    assert len(paytm_flag["reason"]) <= 80
+
+    # 4. Short brand tokens (< 4 chars) never match as substring of larger word
+    res_mysbitech = analyze_url("http://mysbitech.com")
+    codes_mysbitech = [f["code"] for f in res_mysbitech["flags"]]
+    assert "BRAND_LOOKALIKE" not in codes_mysbitech
+    assert "BRAND_IN_DOMAIN" not in codes_mysbitech
+
+    # 5. Official-domain guard remains unchanged (score <= 10, empty flags)
+    res_off = analyze_url("https://sbi.co.in")
+    assert res_off["score"] <= 10
+    assert res_off["flags"] == []
+
+
+def test_domain_age_under_30d_upgrades_brand_in_domain_to_lookalike():
+    """Domain age < 30 days satisfies condition (d) and upgrades BRAND_IN_DOMAIN to BRAND_LOOKALIKE."""
+    mock_rdap_resp = MagicMock()
+    mock_rdap_resp.status_code = 200
+    mock_rdap_resp.json.return_value = {
+        "events": [
+            {"eventAction": "registration", "eventDate": "2026-10-25T10:00:00Z"}
+        ]
+    }
+    with patch("requests.get", return_value=mock_rdap_resp):
+        res = analyze_url("http://hdfclife-promo.com")
+
+    codes = [f["code"] for f in res["flags"]]
+    assert "BRAND_LOOKALIKE" in codes
+    assert "BRAND_IN_DOMAIN" not in codes
+    assert "NEW_DOMAIN" in codes
+
+
+def test_slow_rdap_capped_by_network_budget():
+    """A slow mocked RDAP (sleeping 10s) must not cause analyze_url to exceed ~3.5s."""
+    import time
+
+    def slow_rdap(*args, **kwargs):
+        time.sleep(10)
+        resp = MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = {}
+        return resp
+
+    with patch("requests.get", side_effect=slow_rdap):
+        start_time = time.monotonic()
+        result = analyze_url("http://example-slow-rdap-test.com")
+        duration = time.monotonic() - start_time
+
+    assert duration < 3.5, f"analyze_url took {duration:.2f}s, exceeding 3.5s budget"
+    assert result["meta"]["domain_age_days"] is None
+    assert isinstance(result["score"], int)

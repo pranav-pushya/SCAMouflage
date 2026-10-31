@@ -10,6 +10,8 @@ import math
 import os
 import re
 import socket
+import threading
+import time
 import urllib.parse
 from collections import Counter
 from datetime import datetime, timezone
@@ -24,7 +26,9 @@ from rapidfuzz import fuzz
 from .url_config import (
     BRAND_SIMILARITY_THRESHOLD,
     MAX_REDIRECT_HOPS,
+    NETWORK_BUDGET_SECONDS,
     OFFICIAL_DOMAIN_MAX_SCORE,
+    PHISHING_KEYWORDS,
     REQUEST_TIMEOUT_SECONDS,
     RULE_WEIGHTS,
     SHORTENER_DOMAINS,
@@ -405,9 +409,15 @@ def extract_features(url: str) -> Dict[str, Any]:
             if not is_off:
                 brand_keywords = _get_brand_keywords(b)
                 for kw_clean in brand_keywords:
-                    if kw_clean in host_tokens or kw_clean in domain_part:
-                        has_brand_keyword = 1
-                        break
+                    kw = kw_clean.lower()
+                    if len(kw) < 4:
+                        if kw in host_tokens:
+                            has_brand_keyword = 1
+                            break
+                    else:
+                        if kw in host_tokens or kw in domain_part:
+                            has_brand_keyword = 1
+                            break
             if has_brand_keyword:
                 break
 
@@ -456,10 +466,14 @@ def extract_features(url: str) -> Dict[str, Any]:
         }
 
 
-def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str, str]], bool, str]:
-    """Evaluate lexical heuristics, brand spoofing, and official domain protection."""
+def _evaluate_rules_and_brands(
+    normalized_url: str,
+    domain_age_days: Optional[int] = None,
+) -> Tuple[int, List[Dict[str, str]], bool, str, Optional[str]]:
+    """Evaluate lexical heuristics, two-tier brand spoofing, and official domain protection."""
     flags: List[Dict[str, str]] = []
     score = 0
+    matched_brand_name: Optional[str] = None
 
     parsed = urllib.parse.urlsplit(normalized_url)
     host = (parsed.hostname or "").lower()
@@ -483,7 +497,7 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
 
     if is_official:
         # Protected bank/official brand site: cap score low, add no risky flags
-        return min(score, OFFICIAL_DOMAIN_MAX_SCORE), [], True, registered_domain
+        return min(score, OFFICIAL_DOMAIN_MAX_SCORE), [], True, registered_domain, None
 
     # 2. IP address host (dotted-quad, hex, decimal, octal, IPv6)
     if is_ip:
@@ -553,12 +567,21 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
         })
         score += RULE_WEIGHTS["NO_HTTPS"]
 
-    # 10. Brand lookalike and typo detection
-    host_tokens = [t for t in re.split(r"[.\-_0-9]", host) if t]
+    # 10. Two-tier brand lookalike and typo detection
+    host_tokens = [t.lower() for t in re.split(r"[.\-_0-9]", host) if t]
     domain_part = (ext.domain or "").lower()
+    subdomain_tokens = [t.lower() for t in re.split(r"[.\-_0-9]", ext.subdomain) if t]
+    domain_labels = [l.lower() for l in host.split(".") if l]
+
+    # Check for phishing keywords across host tokens and domain labels
+    has_phish_kw = any(pk in host_tokens for pk in PHISHING_KEYWORDS) or any(
+        any(pk in lbl for pk in PHISHING_KEYWORDS)
+        for lbl in domain_labels
+        if lbl != suffix
+    )
 
     for b in brands:
-        brand_name = b.get("name", "Bank")
+        b_name = b.get("name", "Bank")
         official_list = b.get("official_domains", [])
         is_off_for_brand = (
             registered_domain in official_list
@@ -567,29 +590,76 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
         if is_off_for_brand:
             continue
 
-        matched_brand = False
+        matched_kw: Optional[str] = None
+        is_typo = False
+        brand_in_sub = False
+
         brand_keywords = _get_brand_keywords(b)
         for kw_clean in brand_keywords:
-            # Token match in host or substring inside the domain label
-            if kw_clean in host_tokens or kw_clean in domain_part:
-                matched_brand = True
-                break
-            # RapidFuzz typo near-miss check
-            if domain_part and len(domain_part) >= 3:
-                sim = fuzz.ratio(domain_part, kw_clean)
-                if sim >= BRAND_SIMILARITY_THRESHOLD:
-                    matched_brand = True
+            kw = kw_clean.lower()
+            if not kw:
+                continue
+
+            # (b) Brand in subdomain labels while registered domain is different
+            if ext.subdomain:
+                if len(kw) < 4:
+                    if kw in subdomain_tokens:
+                        matched_kw = kw
+                        brand_in_sub = True
+                        break
+                else:
+                    if kw in subdomain_tokens or any(kw in st for st in subdomain_tokens):
+                        matched_kw = kw
+                        brand_in_sub = True
+                        break
+
+            # Brand in domain labels
+            if len(kw) < 4:
+                # Rule 2: Brand tokens shorter than 4 chars may only match as a whole label token
+                if kw in host_tokens:
+                    matched_kw = kw
+                    break
+            else:
+                # >= 4 chars: may match whole token or substring inside domain label
+                if kw in host_tokens or kw in domain_part or any(kw in lbl for lbl in domain_labels if lbl != suffix):
+                    matched_kw = kw
                     break
 
-        if matched_brand:
-            flags.append({
-                "code": "BRAND_LOOKALIKE",
-                "reason": f"{brand_name} jaisa dikhta hai, par ye {brand_name} ka asli domain nahi hai",
-            })
-            score += RULE_WEIGHTS["BRAND_LOOKALIKE"]
+            # (c) RapidFuzz typo near-miss check against a whole domain label
+            for lbl in domain_labels:
+                if len(lbl) >= 3 and lbl != suffix:
+                    sim = fuzz.ratio(lbl, kw)
+                    if sim >= BRAND_SIMILARITY_THRESHOLD:
+                        matched_kw = kw
+                        is_typo = True
+                        break
+            if matched_kw:
+                break
+
+        if matched_kw:
+            matched_brand_name = b_name
+            # Tier 1 (BRAND_LOOKALIKE):
+            # (a) phishing keyword in domain labels
+            # (b) brand in subdomain labels while registered domain is different
+            # (c) rapidfuzz typo-match against a whole domain label
+            # (d) known domain age < 30 days
+            is_young = (domain_age_days is not None and domain_age_days < 30)
+
+            if has_phish_kw or brand_in_sub or is_typo or is_young:
+                flags.append({
+                    "code": "BRAND_LOOKALIKE",
+                    "reason": f"{b_name} jaisa dikhta hai, par ye {b_name} ka asli domain nahi hai",
+                })
+                score += RULE_WEIGHTS["BRAND_LOOKALIKE"]
+            else:
+                flags.append({
+                    "code": "BRAND_IN_DOMAIN",
+                    "reason": f"Domain name me {b_name} shamil hai, par ye official domain nahi hai",
+                })
+                score += RULE_WEIGHTS["BRAND_IN_DOMAIN"]
             break
 
-    return score, flags, False, registered_domain
+    return score, flags, False, registered_domain, matched_brand_name
 
 
 def _load_ml_model() -> Optional[Dict[str, Any]]:
@@ -695,7 +765,20 @@ def analyze_url(url: str) -> Dict[str, Any]:
                 },
             }
 
-        rule_score, flags, is_official, registered_domain = _evaluate_rules_and_brands(normalized_url)
+        rule_score, flags, is_official, registered_domain, matched_brand_name = _evaluate_rules_and_brands(normalized_url)
+
+        if is_official:
+            return {
+                "score": min(rule_score, OFFICIAL_DOMAIN_MAX_SCORE),
+                "flags": [],
+                "meta": {
+                    "normalized_url": normalized_url,
+                    "registered_domain": registered_domain,
+                    "final_destination": None,
+                    "domain_age_days": None,
+                    "ml_probability": None,
+                },
+            }
 
         final_destination: Optional[str] = None
         domain_age_days: Optional[int] = None
@@ -704,8 +787,62 @@ def analyze_url(url: str) -> Dict[str, Any]:
         parsed = urllib.parse.urlsplit(normalized_url)
         host = (parsed.hostname or "").lower()
 
-        # Handle URL shorteners & redirects
+        # Concurrently perform network checks within hard budget cap (NETWORK_BUDGET_SECONDS)
         is_shortener = (host in SHORTENER_DOMAINS) or (registered_domain in SHORTENER_DOMAINS)
+        needs_rdap = (
+            not is_official
+            and not is_shortener
+            and bool(registered_domain)
+            and not _is_ip_host(host)
+            and not _is_ip_host(registered_domain)
+            and host != "localhost"
+            and registered_domain != "localhost"
+            and is_ssrf_safe_url(f"http://{registered_domain}")
+        )
+
+        dest: Optional[str] = None
+        hops: int = 0
+
+        if is_shortener or needs_rdap:
+            start_net = time.monotonic()
+            t_redirect: Optional[threading.Thread] = None
+            t_rdap: Optional[threading.Thread] = None
+            redirect_box: List[Any] = [None, 0]
+            rdap_box: List[Any] = [None]
+
+            if is_shortener:
+                def _run_redirect():
+                    try:
+                        redirect_box[0], redirect_box[1] = unwrap_redirects(normalized_url)
+                    except Exception:
+                        pass
+                t_redirect = threading.Thread(target=_run_redirect, daemon=True)
+                t_redirect.start()
+
+            if needs_rdap:
+                def _run_rdap():
+                    try:
+                        rdap_box[0] = get_domain_age_days(registered_domain)
+                    except Exception:
+                        pass
+                t_rdap = threading.Thread(target=_run_rdap, daemon=True)
+                t_rdap.start()
+
+            if t_redirect is not None:
+                elapsed = time.monotonic() - start_net
+                remaining = max(0.0, NETWORK_BUDGET_SECONDS - elapsed)
+                t_redirect.join(timeout=remaining)
+                if not t_redirect.is_alive():
+                    dest, hops = redirect_box[0], redirect_box[1]
+
+            if t_rdap is not None:
+                elapsed = time.monotonic() - start_net
+                remaining = max(0.0, NETWORK_BUDGET_SECONDS - elapsed)
+                t_rdap.join(timeout=remaining)
+                if not t_rdap.is_alive():
+                    domain_age_days = rdap_box[0]
+
+        # Handle URL shorteners & redirects
         if is_shortener:
             flags.append({
                 "code": "SHORTENER_REDIRECT",
@@ -713,7 +850,6 @@ def analyze_url(url: str) -> Dict[str, Any]:
             })
             rule_score += RULE_WEIGHTS["SHORTENER_REDIRECT"]
 
-            dest, hops = unwrap_redirects(normalized_url)
             if hops >= 3:
                 flags.append({
                     "code": "REDIRECT_CHAIN_LONG",
@@ -727,7 +863,7 @@ def analyze_url(url: str) -> Dict[str, Any]:
                 dest_ext = _EXTRACTOR(dest)
                 dest_reg = _get_registered_domain(dest_ext)
                 if dest_reg and dest_reg != registered_domain:
-                    dest_score, dest_flags, dest_is_off, _ = _evaluate_rules_and_brands(dest)
+                    dest_score, dest_flags, dest_is_off, _, dest_b_name = _evaluate_rules_and_brands(dest)
                     if dest_is_off:
                         is_official = True
                         rule_score = min(rule_score, OFFICIAL_DOMAIN_MAX_SCORE)
@@ -739,30 +875,28 @@ def analyze_url(url: str) -> Dict[str, Any]:
                                 flags.append(f)
                                 rule_score += RULE_WEIGHTS.get(f["code"], 0)
 
-        # Domain age query via RDAP (only for non-official, non-IP, public domains)
-        if (
-            not is_official
-            and registered_domain
-            and not _is_ip_host(host)
-            and not _is_ip_host(registered_domain)
-            and host != "localhost"
-            and registered_domain != "localhost"
-            and is_ssrf_safe_url(f"http://{registered_domain}")
-        ):
-            domain_age_days = get_domain_age_days(registered_domain)
-            if domain_age_days is not None:
-                if domain_age_days < 30:
-                    flags.append({
-                        "code": "NEW_DOMAIN",
-                        "reason": f"Domain sirf {domain_age_days} din purana hai",
-                    })
-                    rule_score += RULE_WEIGHTS["NEW_DOMAIN_UNDER_30D"]
-                elif domain_age_days < 90:
-                    flags.append({
-                        "code": "NEW_DOMAIN",
-                        "reason": f"Domain naya hai (sirf {domain_age_days} din purana)",
-                    })
-                    rule_score += RULE_WEIGHTS["NEW_DOMAIN_UNDER_90D"]
+        # Domain age query via RDAP
+        if domain_age_days is not None and not is_official:
+            if domain_age_days < 30:
+                flags.append({
+                    "code": "NEW_DOMAIN",
+                    "reason": f"Domain sirf {domain_age_days} din purana hai",
+                })
+                rule_score += RULE_WEIGHTS["NEW_DOMAIN_UNDER_30D"]
+                # Condition (d): age < 30 days upgrades BRAND_IN_DOMAIN to BRAND_LOOKALIKE
+                if matched_brand_name:
+                    for f in flags:
+                        if f["code"] == "BRAND_IN_DOMAIN":
+                            f["code"] = "BRAND_LOOKALIKE"
+                            f["reason"] = f"{matched_brand_name} jaisa dikhta hai, par ye {matched_brand_name} ka asli domain nahi hai"
+                            rule_score = rule_score - RULE_WEIGHTS["BRAND_IN_DOMAIN"] + RULE_WEIGHTS["BRAND_LOOKALIKE"]
+                            break
+            elif domain_age_days < 90:
+                flags.append({
+                    "code": "NEW_DOMAIN",
+                    "reason": f"Domain naya hai (sirf {domain_age_days} din purana)",
+                })
+                rule_score += RULE_WEIGHTS["NEW_DOMAIN_UNDER_90D"]
 
         # Machine learning scoring (Stage 5 integration)
         model_data = _load_ml_model()
