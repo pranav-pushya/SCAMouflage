@@ -1,0 +1,12 @@
+Delivered-To: [NAME]@gmail.com
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41]) by mx.google.com with SMTPS; Wed, 28 Oct 2026 01:20:11 -0700 (PDT)
+Return-Path: <indiapost.parcel.help2026@gmail.com>
+Received-SPF: pass (google.com: domain of indiapost.parcel.help2026@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com; dkim=pass header.i=@gmail.com; spf=pass smtp.mailfrom=indiapost.parcel.help2026@gmail.com; dmarc=pass (p=NONE) header.from=gmail.com
+Date: Wed, 28 Oct 2026 13:50:08 +0530
+From: "India Post Delivery" <indiapost.parcel.help2026@gmail.com>
+To: [NAME]@gmail.com
+Subject: Parcel on hold. Pay Rs. 25 customs fee today or it will be returned
+Message-ID: <CAK7x9f2a@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8

@@ -1,0 +1,14 @@
+Delivered-To: [NAME]@gmail.com
+Received: from mail-relay.sbi-kyc-update[.]xyz (unknown [203.0.113.45]) by mx.google.com with ESMTP; Mon, 26 Oct 2026 09:12:04 -0700 (PDT)
+Return-Path: <bounce@sbi-kyc-update[.]xyz>
+Received-SPF: fail (google.com: domain of bounce@sbi-kyc-update[.]xyz does not designate 203.0.113.45 as permitted sender) client-ip=203.0.113.45;
+Authentication-Results: mx.google.com; dkim=none; spf=fail smtp.mailfrom=bounce@sbi-kyc-update[.]xyz; dmarc=fail (p=REJECT) header.from=sbi.co.in
+Date: Mon, 26 Oct 2026 21:42:01 +0530
+From: "SBI Alerts" <alerts@sbi.co.in>
+Reply-To: support@sbi-help[.]xyz
+To: [NAME]@gmail.com
+Subject: URGENT: Your SBI account will be BLOCKED today. Update KYC now
+Message-ID: <20261026214201.7788@sbi-kyc-update[.]xyz>
+X-Priority: 1
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8

@@ -1,0 +1,10 @@
+filename,label,spf,dkim,dmarc,reply_to_mismatch,source
+legit_1.txt,legit,pass,pass,pass,no,real
+legit_2.txt,legit,pass,pass,pass,no,real
+legit_3.txt,legit,pass,pass,pass,no,real
+legit_4.txt,legit,pass,pass,pass,no,real
+spam_1.txt,spam,pass,pass,pass,no,real
+spam_2.txt,spam,pass,pass,pass,no,real
+synthetic_1.txt,scam,fail,none,fail,yes,synthetic
+synthetic_2.txt,scam,fail,fail,fail,no,synthetic
+synthetic_3.txt,scam,pass,pass,pass,no,synthetic

@@ -1,0 +1,13 @@
+Delivered-To: [NAME]@gmail.com
+Received: from smtp.mail-hdfc-secure[.]top (unknown [198.51.100.77]) by mx.google.com with ESMTP; Tue, 27 Oct 2026 03:05:44 -0700 (PDT)
+Return-Path: <info@mail-hdfc-secure[.]top>
+Received-SPF: fail (google.com: domain of info@mail-hdfc-secure[.]top does not designate 198.51.100.77 as permitted sender) client-ip=198.51.100.77;
+Authentication-Results: mx.google.com; dkim=fail header.i=@hdfcbank.com; spf=fail smtp.mailfrom=info@mail-hdfc-secure[.]top; dmarc=fail (p=REJECT) header.from=hdfcbank.com
+Date: Tue, 27 Oct 2026 15:35:40 +0530
+From: "HDFC Bank Security" <noreply@hdfcbank.com>
+To: [NAME]@gmail.com
+Subject: Rs. 49,999 debited from your account. Not you? Verify immediately
+Message-ID: <a91f33c2@mail-hdfc-secure[.]top>
+X-Priority: 1
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8

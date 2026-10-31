@@ -1,0 +1,25 @@
+Delivered-To: [NAME]@gmail.com
+Received: by 2002:a05:7108:3a95:b0:493:9600:9f99 with SMTP id n21csp14341gdu; Thu, 18 Sep 2025 20:23:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGs4tASGk/VnZf7CgSBBKhvRwsaBAmgO1PKtZFOVtAxUhkCHOrzkSCjDwdD0Ps/3i10WuqJ
+X-Received: by 2002:a17:90a:ec83:b0:32e:8c14:5d09 with SMTP id 98e67ed59e1d1-33097fef587mr2195502a91.7.1758252216155; Thu, 18 Sep 2025 20:23:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1758252216; cv=none; d=google.com; s=arc-20240605; b=cbS4EkAED3PqpYOcSMacFYmN/425HSEB3I3qB/OeyXjwhqyYmNM6hWi/fvzRhMYSJy Og7I1UhX1gnnmjYVCBqBYsfmXh1mal4Bvr3IwsWgU4JVOMGmhT0BTqEVzuj76i++1i9X Y8DGkyR/+DIMyMgvXGNbYBBrdBylirpss7ObV4yVu/E2wj6G8qylUp1yQCS81VgOLBzs 90anJpkNXZH6qyeBJTWBMntNladKMQWIStsrweXa6M+zh3NLZb8rFleluYskDTJlfiRz 3aiZOPlz/lYon9GNIzT2ywMMQNE/jbqblJndKf2kxKjVoYmwjA2OvRAPaWkJJq2hTX7S cO7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605; h=message-id:content-transfer-encoding:subject:date:importance :priority:to:from:mime-version:dkim-signature; bh=A1ngfcYmm0ey5VPbtvo3EvYPJO4mWFPfMnJ/8WhEy5Y=; fh=3eRGdFwYIV7QHBh2MCRFFpEG34CtNay0/5tHmMdLwZA=; b=jfW8k0IBhov8EoqR8LoDAR79Raj04e3ETyJ0a+wQbBL8j/2S3D5275Sj0Q25/9kXSK 6kaRaL2ndxya8CQopmhuMDLZN1T/r++kb8Ltk4OtPcBdTbhVVuF4CHXmiC2U3fjeSvJ8 WmHwnt7hvfCVf5pB9a45YN+GthHXY5eGL43kX7ynEDxt5RWA2/W6d4k+44+7igIfxI9g izF4UG5TZkTBrvkhp79dhAzBdhv17QFLi60c4NoT+ZigRQcoicCV/ypm+s4iO8a2f9fi flIZgZpL+QXC9g/pj7pj5dL7AHPqYFryMm5JSehTMByH9XuiAzEoeiSSNuVTTfPUEf6t 5B1g==; dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@nic.in header.s=NIC header.b=TR2QFW0u; spf=pass (google.com: domain of no-reply.cuetug.nta@nic.in designates 164.100.13.44 as permitted sender) smtp.mailfrom=no-reply.cuetug.nta@nic.in; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=nic.in
+Return-Path: <no-reply.cuetug.nta@nic.in>
+Received: from vastu13044.nic.in (vastu13044.nic.in. [164.100.13.44]) by mx.google.com with ESMTPS id 41be03b00d2f7-b54ff463461si2549747a12.1283.2025.09.18.20.23.35 for <[NAME]@gmail.com> (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128); Thu, 18 Sep 2025 20:23:36 -0700 (PDT)
+Received-SPF: pass (google.com: domain of no-reply.cuetug.nta@nic.in designates 164.100.13.44 as permitted sender) client-ip=164.100.13.44;
+Authentication-Results: mx.google.com; dkim=pass header.i=@nic.in header.s=NIC header.b=TR2QFW0u; spf=pass (google.com: domain of no-reply.cuetug.nta@nic.in designates 164.100.13.44 as permitted sender) smtp.mailfrom=no-reply.cuetug.nta@nic.in; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=nic.in
+Received: from vastu13045.nic.in (localhost.localdomain [127.0.0.1]) by smtpgwhyd.nic.in (Postfix) with ESMTP id 0098510962268 for <[NAME]@gmail.com>; Thu, 18 Sep 2025 16:19:12 +0530 (IST)
+Received: from HDM2ECOP-WS26 (unknown [10.103.13.148]) by vastu13045.nic.in (Postfix) with ESMTP id C6C25181BAC35 for <[NAME]@gmail.com>; Thu, 18 Sep 2025 16:19:12 +0530 (IST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.in; s=NIC; t=1758192552; bh=A1ngfcYmm0ey5VPbtvo3EvYPJO4mWFPfMnJ/8WhEy5Y=; h=From:To:Date:Subject; b=TR2QFW0uoAa6wQ+mN3XqfxqoEC8FDIFu7beRzR7FPbjjaquaIQ6JC/RxGc+2Xwteo Lt7dxevFIVaIsgIgxUlqPyeMUwZlEz053Yl07z5+NRvHUBKCoNiVEOIn+m9CXTXvrt 8TAviNKkbEcXTew0xqDBt0sGC6aaBlwBTNkBFZWo=
+MIME-Version: 1.0
+From: no-reply.cuetug.nta@nic.in
+To: [NAME]@gmail.com
+X-Priority: 1
+Priority: urgent
+Importance: high
+Date: 18 Sep 2025 16:19:12 +0530
+Subject: Financial Support Scheme for Higher Education Students by Government of India
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+Message-Id: <20250918104913.0098510962268@smtpgwhyd.nic.in>
