@@ -1,0 +1,21 @@
+text,label,category,style,source
+"Dear Customer, INR [REDACTED] credited to A/C [REDACTED] on [REDACTED] by UPI ref [REDACTED]. Avail Bal: INR [REDACTED] -Axis Bank",legit,payment,english,synthetic
+Use OTP [REDACTED] to authenticate your payment of Rs. [REDACTED] on Amazon Pay. Never share your OTP with anyone. -HDFC Bank,legit,otp,english,synthetic
+"Your DTDC consignment [REDACTED] is out for delivery today. To track live location, visit hxxps://dtdc[.]in/track/[REDACTED] -DTDC",legit,courier,english,synthetic
+"Dear Consumer, payment of Rs. [REDACTED] received against CA [REDACTED] on [REDACTED] with thanks. -Tata Power",legit,electricity,english,synthetic
+Aapke Axis Bank account [REDACTED] se Rs. [REDACTED] ATM cash withdrawal safal raha. Available balance: Rs. [REDACTED].,legit,payment,hinglish,synthetic
+Flipkart order delivery ke liye OTP hai [REDACTED]. Delivery agent aane par hi yeh code unhe dein.,legit,otp,hinglish,synthetic
+Aapka Jio fiber monthly bill Rs. [REDACTED] due hai [REDACTED] tak. MyJio app se payment karein: hxxps://jio[.]com/[REDACTED] -Jio,legit,telecom,hinglish,synthetic
+Tuhade Bank khate [REDACTED] te Rs. [REDACTED] jama kite gaye han. Total balance: Rs. [REDACTED]. -Punjab National Bank,legit,payment,punjabi,synthetic
+Swiggy khana deliver karan layi tuhada PIN [REDACTED] hai. Samaan milan te delivery partner nu daso ji.,legit,otp,punjabi,synthetic
+Tuhade PSPCL bijli meter [REDACTED] da payment Rs. [REDACTED] safalta purvak prapt ho gaya hai. Dhanvad. -PSPCL,legit,electricity,punjabi,synthetic
+"Dear customer, your ICICI bank card has been deactivated. Reactivate immediately by verifying documents: hxxp://icici-verify[.]link",scam,kyc,english,synthetic
+Electricity Alert: Your power will be disconnected today at 10 PM due to system server update. Contact executive immediately at 94XXXXXXXX,scam,electricity,english,synthetic
+Congratulations! You have been selected for Amazon Work From Home. Daily income Rs 3500. Message on Telegram: hxxp://t[.]me/amazon-hr-recruits,scam,job_task,english,synthetic
+Aapka SBI netbanking account aaj raat suspend ho jayega. Turant apna Aadhaar link karein: hxxp://sbi-aadhaar-auth[.]info,scam,aadhaar_pan,hinglish,synthetic
+TRAI Warning: Aapka mobile number 2 ghante mein block ho jayega suspicious activity ke karan. Support call karein: 92XXXXXXXX,scam,telecom,hinglish,synthetic
+India Post alert: Aapka parcel delivery address galat hai. Redelivery schedule karne ke liye Rs 25 bharein: hxxp://indiapost-parcel[.]top,scam,courier,hinglish,synthetic
+"Aapko Rs 5,00,000 ka personal loan approved hua hai. Instant bank transfer ke liye processing fee pay karein: hxxp://quick-cash-loan[.]in",scam,loan,hinglish,synthetic
+Tuhada electricity connection ajj sham 8 baje kat dita javega kyonki bill update nahi hoya. Officer nal gal karo: 93XXXXXXXX,scam,electricity,punjabi,synthetic
+Punjab Police Cyber Cell: Tuhada phone illegal drugs case vich trace hoya hai. Giraftari to bachan layi turant video call join karo.,scam,digital_arrest,punjabi,synthetic
+Tuhade Bank khate ch KYC khatam ho gayi hai. Khata chalu rakhan layi link te ja ke verify karo: hxxp://bank-kyc-punjab[.]cc,scam,kyc,punjabi,synthetic

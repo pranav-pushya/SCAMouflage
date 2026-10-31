@@ -1,0 +1,69 @@
+text,label,category,style,source
+Urgent: SBI Account blocked. Update PAN now: hxxp://sbi-pan[.]xyz,scam,kyc,hinglish,synthetic
+Dear customer your KYC is expired. Account will be suspended today. Update: hxxp://hdfc-kyc[.]top,scam,kyc,english,synthetic
+"Tuhada account band ho janda aje, KYC hune update karo: hxxp://kyc-bank[.]info",scam,kyc,punjabi,synthetic
+FASTag balance low. Recharge within 2 hrs or tag will be blocked: hxxp://fastag-pay[.]xyz,scam,fastag,english,synthetic
+Aapka FASTag deactivate ho gaya hai. Abhi KYC karo warna penalty lagegi hxxp://fastag-kyc[.]online,scam,fastag,hinglish,synthetic
+This is CBI. A parcel in your name contains illegal items. Call 91XXXXXXXX immediately to avoid arrest.,scam,digital_arrest,english,synthetic
+"Aapke Aadhaar se illegal transactions hui hain. Cyber police se baat karo, warna warrant jari hoga.",scam,digital_arrest,hinglish,synthetic
+Your courier is held at customs. Pay Rs 49 clearance fee: hxxp://india-post-fee[.]cc,scam,courier,english,synthetic
+Aapka parcel delivery fail ho gaya. Address confirm karo: hxxp://dlv-track[.]xyz,scam,courier,hinglish,synthetic
+"Dear consumer, your electricity will be disconnected tonight 9:30 PM due to unpaid bill. Call 98XXXXXXXX",scam,electricity,english,synthetic
+"Bijli bill pending hai, aaj raat connection kat jayega. Officer ko call karo: 99XXXXXXXX",scam,electricity,hinglish,synthetic
+"Your Aadhaar is not linked to PAN. Link today to avoid Rs 10,000 penalty: hxxp://pan-aadhaar[.]link-up[.]xyz",scam,aadhaar_pan,english,synthetic
+"Congratulations! You won Rs 25,00,000 in KBC Lucky Draw. WhatsApp 90XXXXXXXX to claim.",scam,lottery,english,synthetic
+Tusi KBC lottery jitt gaye ho! Prize lain layi hune sampark karo: 98XXXXXXXX,scam,lottery,punjabi,synthetic
+Part-time job: earn Rs 5000/day liking videos. Join Telegram: hxxp://t[.]me/earn-xyz,scam,job_task,english,synthetic
+"Pre-approved loan Rs 2 lakh, no documents. Pay Rs 999 processing fee: hxxp://quick-loan[.]xyz",scam,loan,hinglish,synthetic
+"Aapka PAN Aadhaar se link nahi hai. Aaj hi link karo warna Rs 10,000 jurmana: hxxp://pan-link[.]online",scam,aadhaar_pan,hinglish,synthetic
+Tuhada PAN Aadhaar naal link nahi hai. Ajj hi update karo nahi ta penalty lagu: hxxp://aadhaar-pan[.]top,scam,aadhaar_pan,punjabi,synthetic
+"Dear user, FASTag KYC pending. Complete in 24 hrs to avoid blacklisting: hxxp://fastag-verify[.]cc",scam,fastag,english,synthetic
+Mumbai Cyber Cell: Your SIM is used in illegal activity. Join video call now or face arrest. Do not tell anyone.,scam,digital_arrest,english,synthetic
+"Tuhade naam te parcel ch drugs mile ne. Police naal video call te gal karo, nahi ta giraftari hovegi.",scam,digital_arrest,punjabi,synthetic
+Tuhada courier customs ch atka hai. Rs 75 fee bharo: hxxp://post-fee[.]xyz,scam,courier,punjabi,synthetic
+Your power bill of last month is not updated. Supply will be disconnected today. Update via hxxp://pay-bijli[.]xyz,scam,electricity,english,synthetic
+Badhai ho! Aapne KBC mein Rs 10 lakh jeete hain. Claim ke liye Rs 1500 fee bhejein: 98XXXXXXXX,scam,lottery,hinglish,synthetic
+"Ghar baithe kamao Rs 3000 daily, bas YouTube videos like karo. Abhi WhatsApp karo: 99XXXXXXXX",scam,job_task,hinglish,synthetic
+"Instant personal loan up to Rs 5 lakh, no CIBIL check. Pay Rs 1200 insurance fee to release funds: hxxp://easy-cash[.]top",scam,loan,english,synthetic
+"Dear Customer, complete your HP EMI transaction of ₹ [REDACTED] at [REDACTED]. Pay now : hxxps://pyn[.]onl/[REDACTED]. This link will expire on : [REDACTED] -Pine Labs",legit,payment,english,own
+"Now get Unlimited data and Unlimited Calls for all handsets with Airtel's new Fully Unlimited pack for just Rs. 399, valid for 28 days. Recharge now: hxxps://i[.]airtel[.]in/[REDACTED]",legit,telecom,english,own
+<#>[REDACTED] is your Urban Company ACCOUNT LOGIN verification code. DO NOT SHARE this code with anyone for account safety. [REDACTED],legit,otp,english,own
+"Hi Learner, we can schedule a 1:1 video session to align the program with your career goals and clarify any pending questions. - hxxps://weurl[.]co/[REDACTED] - Amity Online",legit,education,english,own
+"To DELIVER [REDACTED] from Urbanic (AWB [REDACTED]), share OTP [REDACTED]. Track@ hxxps://www[.]delhivery[.]com -Delhivery",legit,courier,english,own
+"Hi, we've received Rs. [REDACTED] against your Airtel Wi-Fi [REDACTED]. Your services will resume within 1 hour. To download payment receipt or know more about your connection, visit Airtel Thanks App hxxps://www[.]airtel[.]in/[REDACTED]",legit,telecom,english,own
+"Dear Customer, INR [REDACTED] debited from A/c [REDACTED] on [REDACTED] towards UPI txn. Avail Bal: INR [REDACTED]. Not you? SMS BLOCK to [REDACTED] -HDFC Bank",legit,payment,english,synthetic
+Your A/C [REDACTED] is credited with INR [REDACTED] on [REDACTED] by transfer. Clear Bal: INR [REDACTED]. -State Bank of India,legit,payment,english,synthetic
+"OTP for login to your SBI YONO account is [REDACTED]. Valid for 5 mins. Do not share OTP with anyone, including bank officials.",legit,otp,english,synthetic
+"Dear Consumer, your electricity bill of Rs. [REDACTED] for CA [REDACTED] is due on [REDACTED]. Pay via hxxps://www[.]tatapower-ddl[.]com to avoid surcharge.",legit,electricity,english,synthetic
+Your BlueDart shipment with Waybill [REDACTED] is out for delivery. Contact courier delivery associate at [REDACTED].,legit,courier,english,synthetic
+"Dear Parent, school fees for quarter 3 of Rs. [REDACTED] for your ward [REDACTED] is due by [REDACTED]. Pay online at hxxps://portal[.]dps[.]edu/[REDACTED] -DPS",legit,education,english,synthetic
+"Dear Customer, EMI of Rs. [REDACTED] for your Auto Loan [REDACTED] is scheduled for deduction on [REDACTED]. Maintain sufficient balance. -ICICI Bank",legit,loan,english,synthetic
+"Recharge of Rs. [REDACTED] for Jio No. [REDACTED] is successful. Plan benefits: [REDACTED] GB/day, Unlimited calls. Validity: 28 days. -Jio",legit,telecom,english,synthetic
+Aapke A/C [REDACTED] se Rs. [REDACTED] debit ho gaye hain [REDACTED] ko. Agar aapne ye nahi kiya toh turant [REDACTED] par call karein. -Axis Bank,legit,payment,hinglish,synthetic
+Swiggy order ke liye aapka OTP hai [REDACTED]. Yeh code delivery partner ke saath delivery ke waqt hi share karein.,legit,otp,hinglish,synthetic
+Aapka bijli bill account [REDACTED] ka Rs. [REDACTED] generate ho gaya hai. Last date [REDACTED] hai. Bill bharein: hxxps://bsesdelhi[.]com/[REDACTED] -BSES,legit,electricity,hinglish,synthetic
+Aapka Amazon package aaj deliver hone wala hai. Track karne ke liye visit karein: hxxps://amazon[.]in/track/[REDACTED] -Amazon,legit,courier,hinglish,synthetic
+Aapke FASTag account [REDACTED] mein low balance alert: Current bal Rs. [REDACTED]. Highway par uninterrupted travel ke liye recharge karein: hxxps://netc[.]org[.]in,legit,fastag,hinglish,synthetic
+Aapke car loan ka EMI Rs. [REDACTED] aane wali [REDACTED] tareekh ko aapke account se katega. Please balance maintain rakhein. -Kotak Bank,legit,loan,hinglish,synthetic
+Aapke mobile number [REDACTED] ka data pack khatam hone wala hai. High-speed continue rakhne ke liye recharge karein Airtel Thanks app par.,legit,telecom,hinglish,synthetic
+"Dear Student, mid-term exam ka admit card release ho chuka hai. Download karne ke liye student portal login karein: hxxps://erp[.]college[.]ac[.]in/[REDACTED]",legit,education,hinglish,synthetic
+Tuhade Bank khate [REDACTED] vicho Rs. [REDACTED] kadhe gaye han. Baki bacheya balance: Rs. [REDACTED]. Kise vi samasya layi 1800XXXX te sampark karo. -PNB,legit,payment,punjabi,synthetic
+Zomato delivery vaste tuhada OTP [REDACTED] hai. Eh OTP delivery rider nu samaan lende samay hi daso.,legit,otp,punjabi,synthetic
+Tuhada bijli da bill meter no [REDACTED] da Rs. [REDACTED] baneya hai. Aakhri tareekh [REDACTED] hai. Bill bharan layi hxxps://pspcl[.]in te jao. -PSPCL,legit,electricity,punjabi,synthetic
+Tuhada Flipkart parcel ajj deliver hovega. Courier boy da number [REDACTED] hai. Track karo: hxxps://ekartlogistics[.]com/[REDACTED],legit,courier,punjabi,synthetic
+"Tuhade FASTag account ch balance ghatt hai, baki raqam Rs. [REDACTED]. Toll plaze te rukawat to bachan layi hune recharge karo.",legit,fastag,punjabi,synthetic
+Tuhade tractor loan di kist Rs. [REDACTED] agle mahine di [REDACTED] tareekh nu katti javegi. Khate vich paise rakho ji. -SBI Agri,legit,loan,punjabi,synthetic
+Tuhade Jio number [REDACTED] te Rs. [REDACTED] da plan safal recharge ho gaya hai. 1.5GB daily data chalu ho gaya hai.,legit,telecom,punjabi,synthetic
+Sabh vidyarthiyan nu soochit kita janda hai ki semester fees jama karan di aakhri miti [REDACTED] hai. Raseed college counter to prapt karo.,legit,education,punjabi,synthetic
+SBI Alert: Aapka YONO account block hone se bachane ke liye turant PAN update karein: hxxp://sbi-pan-update[.]xyz,scam,kyc,hinglish,synthetic
+Congratulations! Aapko Rs. [REDACTED] ka pre-approved loan mila hai 0% byaaj par. Claim karne ke liye click karein: hxxp://fast-loan-app[.]cc,scam,loan,hinglish,synthetic
+Delhi Police: Aapke number se illegal pornography share hui hai. 1 ghante mein video call attend karein warna police ghar aayegi.,scam,digital_arrest,hinglish,synthetic
+Aapka courier address incomplete hone ki wajah se hold pe hai. Address confirm karein aur Rs. 10 pay karein: hxxp://ind-post-track[.]xyz,scam,courier,hinglish,synthetic
+"Dear customer, aapka bijli bill Rs. 3450 unpaid hai. Aaj raat 10 baje line cut jayegi. Call karein bijli vibhag officer: 97XXXXXXXX",scam,electricity,hinglish,synthetic
+Aapke FASTag account ko suspend kar diya gaya hai. Re-activate karne ke liye details bharo: hxxp://fastag-helpdesk[.]info,scam,fastag,hinglish,synthetic
+Tuhada Bank A/C band kita ja reha hai. Turant KYC update karan layi link te jao: hxxp://pnb-kyc-verify[.]net,scam,kyc,punjabi,synthetic
+"Mubarak ho ji! Tuhada number Rs. 15,00,000 lottery ch chunya gaya hai. Inam lain layi WhatsApp karo: 91XXXXXXXX",scam,lottery,punjabi,synthetic
+"Tuhade bijli da bill pichle mahine da baaki hai, ajj raat supply band ho javegi. Bachaav layi contact karo: 98XXXXXXXX",scam,electricity,punjabi,synthetic
+"Ghar baithe kamai karo Rs 4000 daily, mobile te video like karke. Koi fees nahi. Hune join karo: hxxp://t[.]me/easy-job-punjab",scam,job_task,punjabi,synthetic
+Bina kise kagaz to Rs 3 lakh da loan hune pao. Approval layi 500 rupaye registration fee bhejo: hxxp://pb-loan[.]top,scam,loan,punjabi,synthetic
+Tuhada FASTag black list ho gaya hai. Dobara chalu karan layi link dabao: hxxp://pb-fastag[.]xyz,scam,fastag,punjabi,synthetic
