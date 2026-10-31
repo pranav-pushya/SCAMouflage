@@ -1,0 +1,21 @@
+# Raw downloaded datasets & archives
+data/raw/*
+!data/raw/.gitkeep
+*.zip
+*.tar.gz
+*.tgz
+
+# Python cache & temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.env
+
+# OS-specific metadata
+.DS_Store
+Thumbs.db
