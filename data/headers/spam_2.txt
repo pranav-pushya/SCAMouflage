@@ -1,0 +1,27 @@
+Delivered-To: [NAME]@gmail.com
+Received: by 2002:a05:6850:930b:b0:7ac:f5f6:3769 with SMTP id hj11csp1180060nnb; Wed, 7 Oct 2026 21:53:40 -0700 (PDT)
+X-Received: by 2002:a05:620a:4550:b0:93e:6d87:4f6b with SMTP id af79cd13be357-93e9b7d8de9mr901843685a.48.1791435220035; Wed, 07 Oct 2026 21:53:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791435220; cv=none; d=google.com; s=arc-20260327; b=IJJjtKT3KDTtaBnKgbRbmRujzX63azcftJjqp/VE0UnLE1T8LdHv5z1XiYbgUUS+Pk SP7CkfipIjlAFYRS9yoExf5XZ2Fg6ymYv90kpG4LdF04tiC6VxrY+vgi0qOK2Etcoy6w Sa1HBGDA9CcjB/HxGLem2miPRcX3rRRUGdDTjV7Sx5SfxXJ3iPK1b79a3EjbtbJiFoyv uv+7UuxUvy5FcMr9PC7YaPQ9637MwZXME+9J1ia9MDuU41MZJdNHEkEJzQ+AGYrRGD6/ akl8AbYJZ69vB8Ey1YS97BCeEoIjSzlf23/voL2gBrLbovEHQRFXg3Zf57HxxOOBmwZ4 2vxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327; h=mime-version:date:content-transfer-encoding:message-id:subject :reply-to:to:from:list-unsubscribe-post:list-unsubscribe:feedback-id :dkim-signature; bh=WDH4h9CAwYg86qwJJMX6RZM1RKv+zBfMM4zAWMHqrhg=; fh=3eRGdFwYIV7QHBh2MCRFFpEG34CtNay0/5tHmMdLwZA=; b=YCHXLVaAR5Pxm5WD6s+CWjmPiuAOzb4t+CjYYz/fKGwzbqdSSzx0NKJPEOaqQ2phsS UB04tNt+S/9dYvRjPS0U4UThQGUoovhDGJTRyF1NEJVzRCgzHnlbZACjYj5gOLND1PYa ejeaMrGUxoQgd5B2Uowo7du3cb0VIH0BvXiD/pbg/FMQFUsIeCauQvQRGQwP01wDQL+g H3BiCit46yXbH9aXoRmVmNqPAwSMJBJLiwe+Aesf+W6otl6wJRAsnDIMQlbBQbA67/1j HiIk8CeK4WpjYZDBovdBHCN+yR7Ej/C0eomtBMoFygwrhkJkbTGhSq4SugEuSJ7k2jC+ UkWw==; dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@mail.shaadi.in header.s=dkim-s1024 header.b=poC1Oc3u; spf=pass (google.com: domain of matrimonials@mail.shaadi.in designates 52.71.35.216 as permitted sender) smtp.mailfrom=matrimonials@mail.shaadi.in; dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=mail.shaadi.in
+Return-Path: <matrimonials@mail.shaadi.in>
+Received: from mta4.mail.shaadi.in (mta4.mail.shaadi.in. [52.71.35.216]) by mx.google.com with ESMTPS id af79cd13be357-93e991ee941si325405585a.225.2026.10.07.21.53.39 for <[NAME]@gmail.com> (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128); Wed, 07 Oct 2026 21:53:40 -0700 (PDT)
+Received-SPF: pass (google.com: domain of matrimonials@mail.shaadi.in designates 52.71.35.216 as permitted sender) client-ip=52.71.35.216;
+Authentication-Results: mx.google.com; dkim=pass header.i=@mail.shaadi.in header.s=dkim-s1024 header.b=poC1Oc3u; spf=pass (google.com: domain of matrimonials@mail.shaadi.in designates 52.71.35.216 as permitted sender) smtp.mailfrom=matrimonials@mail.shaadi.in; dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=mail.shaadi.in
+Return-Path: <matrimonials@mail.shaadi.in>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.shaadi.in; s=dkim-s1024; t=1791435219; bh=WDH4h9CAwYg86qwJJMX6RZM1RKv+zBfMM4zAWMHqrhg=; h=From:To:Subject:Message-ID:Date:Content-Type; b=poC1Oc3uL0eY4VN+w7Nf5YtX7CVvx0aK3jXnHEWF9ovoBbsEZBu+29tWLP1lSzMB3 J+Ge7hbZm+/0RZRfIKZxlxh96LyA5dJk697L9pJHzmA4Ifpg6p+ZSYk47n2FGOpUo4 9/2daLCRPv5bFy5p12JydkRhszwoYwsrKjA28cTE=
+X-MSFBL: [XXXX]
+Received: from [10.3.3.48] ([10.3.3.48:53260] helo=[127.0.0.1]) by ip-10-0-0-80.ec2.internal (envelope-from <matrimonials@mail.shaadi.in>) (ecelerity 4.2.38.62370 r(:)) with ESMTP id B2/7D-06701-3D127CA6; Thu, 08 Oct 2026 10:23:39 +0530
+X-Campaignid: [XXXX]
+Feedback-ID: [XXXX]
+List-Unsubscribe: <https://www.shaadi.com/eml-trk/click?[XXXX]>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+From: Daily Matches <matrimonials@mail.shaadi.in>
+To: [NAME]@gmail.com
+Reply-To: noreply@mail.shaadi.in
+Subject: [REDACTED]
+Message-ID: <41e51444-f6d5-80c1-c5e9-2eaecbc510f1@mail.shaadi.in>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Oct 2026 04:53:39 +0000
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8

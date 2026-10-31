@@ -1,0 +1,29 @@
+Delivered-To: [NAME]@gmail.com
+Received: by 2002:a05:6850:4b89:b0:7ac:4c0c:f176 with SMTP id ez9csp502353nnb; Wed, 30 Sep 2026 02:28:47 -0700 (PDT)
+X-Received: by 2002:a05:620a:d96:b0:93c:6f66:bd07 with SMTP id af79cd13be357-93ca97437c0mr112375885a.13.1790760526775; Wed, 30 Sep 2026 02:28:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790760526; cv=none; d=google.com; s=arc-20260327; b=a8eGi/hEV0z812VfhwvVKkKch3OZFQfmZekhuKbKAvwTIAkjaDr8/8Nm6t+YIubCAT YVt61sqn35Hp2n7oVYxFywBV4ylP5yrduppTGQVDimSnuTMbOSLgxZSI4zFdlQc/hE0N lJYHQZtcmg3PQrboDn/7tDaAlI/WZb0eE5NFZmhSKHCqgZBoNjLyNr5LzQ8mf68niYQK EGhdQgyuiHOmIwnhR8tS2qfRhx/EkpIfZbEQgGKXrVRwhLiRbPVg02EFOsPJ0E7maAUe 32drB8O2ePc3HDf12LExjLxNcpzCNME13e6NCH4oIN/m9LYLnxN23xzIVofbp/pvuZ6F 0FiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327; h=list-unsubscribe-post:feedback-id:reply-to:list-unsubscribe :content-transfer-encoding:mime-version:message-id:subject:from:to :date:dkim-signature:dkim-signature; bh=vLTLvKGyhLuxmsc9oSWetzHHcgoTiejIKWmGVF+rphU=; fh=3eRGdFwYIV7QHBh2MCRFFpEG34CtNay0/5tHmMdLwZA=; b=ZOdBmK2WwAfxK1DKDVPNUWJUa7VaDIwHAR5jWnmHM1VwERI9cOrP4+4oyH1rW8pd/N bPMseKuzQRQ9/Mi0O0duEvLNTOvrYcn2wqsePL80yM5u28Yf4BV4omTdWeeDHCUTwVi2 ge78sqjs06HnzkHnYCW9pnLb00Oc59aO9fgMk6/YfRuQYEVBJf+n0VCjJmwnaMV0/PZa NwOWUKIU+Rf8Jc5d7xU8i4Eg2av5ZDNurkMdzv90FJMMX4EgPFU5w0IsyOBZZwtGxkeQ wmqBLF2jL6wACn4mZyO0GAivU1QTLGZ3aKX1tfefdAj519EqcRGvju6/4TjgnwGbn9GG 9NLA==; dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@net.shiprocket.in header.s=pepipost header.b=QsJUIod9; dkim=pass header.i=@env.etransmail.com header.s=fnc header.b=OhAoBQC0; spf=pass (google.com: domain of 17907075733803564-55239-1-gmail.com@delivery.net.shiprocket.in designates 193.35.16.183 as permitted sender) smtp.mailfrom=17907075733803564-55239-1-gmail.com@delivery.net.shiprocket.in; dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=shiprocket.in
+Return-Path: <17907075733803564-55239-1-gmail.com@delivery.net.shiprocket.in>
+Received: from mta-16.183.netcmail04.com (mta-16.183.netcmail04.com. [193.35.16.183]) by mx.google.com with ESMTPS id 6a1803df08f44-917a00ab4f8si6787416d6.58.2026.09.30.02.28.46 for <[NAME]@gmail.com> (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256); Wed, 30 Sep 2026 02:28:46 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 17907075733803564-55239-1-gmail.com@delivery.net.shiprocket.in designates 193.35.16.183 as permitted sender) client-ip=193.35.16.183;
+Authentication-Results: mx.google.com; dkim=pass header.i=@net.shiprocket.in header.s=pepipost header.b=QsJUIod9; dkim=pass header.i=@env.etransmail.com header.s=fnc header.b=OhAoBQC0; spf=pass (google.com: domain of 17907075733803564-55239-1-gmail.com@delivery.net.shiprocket.in designates 193.35.16.183 as permitted sender) smtp.mailfrom=17907075733803564-55239-1-gmail.com@delivery.net.shiprocket.in; dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=shiprocket.in
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=net.shiprocket.in; s=pepipost; h=list-unsubscribe-post:feedback-id:reply-to:list-unsubscribe: content-transfer-encoding:content-type:mime-version:message-id:subject:from:to: from:to:subject; bh=vLTLvKGyhLuxmsc9oSWetzHHcgoTiejIKWmGVF+rphU=; b=QsJUIod9diu6lxdPvJbHNkg/BFW1aTrgnzglquTSzMA21y+V8RxRwdkNRVh6w0uYKT2DQCrEErTZ9 EAlcqwbmYa4zgKWBaDtXFDCwmGmZ3HfkXyDbPaImbOKzuyEKVCTuskGN6kvx7Qe3Sc4AF0dlcsHEzJ UtqUtjI5Lamei2rI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=env.etransmail.com; s=fnc; h=list-unsubscribe-post:feedback-id:reply-to:list-unsubscribe: content-transfer-encoding:content-type:mime-version:message-id:subject:from:to: from:to:subject; bh=vLTLvKGyhLuxmsc9oSWetzHHcgoTiejIKWmGVF+rphU=; b=OhAoBQC01wy5/8iysU8rFo0QWjbb1n9ZScOAvA+oqqFlPkTuQOSgiCo+zgAlQdn+C2HZ0YxAcmMt+ UXRFAPV+TmZpQnbj9doEDzSdBY7zvnhxDJytP9nRDq1GCx5uzQPJ6ACl/7bbVUcZQ4/qk6R5Yjq4GN BFSXZckIUEsR9Amc=
+Date: Wed, 30 Sep 2026 14:58:46 +0530
+To: [NAME]@gmail.com
+From: =?UTF-8?B?U2F2YW5h?= <info@net.shiprocket.in>
+Subject: [REDACTED]
+Message-Id: <ujtcko17907075733803564@net.shiprocket.in>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="_----------=_17907605263776008668"
+Content-Transfer-Encoding: binary
+X-Hdelivery: 55239_0
+List-Unsubscribe: <https://delivery.net.shiprocket.in/AKKJYULOJHW?id=[XXXX]>, <mailto:[XXXX]-fncunsub@usub.ftrans03.com?subject=Unsubscribe>
+Reply-To: support@shiprocket.in
+Feedback-Id: 55239:202609:1:falconide
+X-Fncid: 55239-17907075733803564-0
+X-Injtime: 1790760526
+X-Traffic-Type: 55239-2
+X-Mailer: NetcoreCloud Mailer
+List-Unsubscribe-Post: List-Unsubscribe=One-Click

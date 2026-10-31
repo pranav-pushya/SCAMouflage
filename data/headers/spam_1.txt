@@ -1,0 +1,25 @@
+Delivered-To: [NAME]@gmail.com
+Received: by 2002:a05:7108:7506:b0:493:9600:9f99 with SMTP id t6csp114439gds; Fri, 19 Sep 2025 23:07:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcxR5txfzRMu9B75FiLqQyeFl1yXeeEf2ruRedrR01OmKLw3aVcbQLfaNC4fds0LsWFoL9
+X-Received: by 2002:a05:6000:220d:b0:3ec:11a2:17f0 with SMTP id ffacd0b85a97d-3edd43ace8fmr8641882f8f.5.1758348449207; Fri, 19 Sep 2025 23:07:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1758348449; cv=none; d=google.com; s=arc-20240605; b=iKa2zAKcXHfuRmMeiOEBU95IEUuhfUvRCuMdCD7lyfQ/u9el5/cEyd5mO4Gr6Cflsz 469KwtdxP3z5qjLINbSerQmQH5r/7KUhaCQXXw9djIspfSVepTF1javdo3f1jErB1l5T XhHfJGKCmDidsmEYzNben0VqJ1qe5pv97ECdb58gA/GUuDBhKdXkbCd51+oH4I9BeQK9 dW3SZTP8XEVDl4naIov2a/hkqZGZhPk0dZsXVzro+Kud0wQi2iWmqBujg+eohjTuvUoJ Lq7qbkwQV0Shq4a+QjfNOJecVkzHPsBRyydvuTN7jZ0RTwx6fSs6Iy/CTgt9DRzfzRku SCxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605; h=feedback-id:list-unsubscribe-post:list-unsubscribe :content-transfer-encoding:mime-version:subject:message-id:to :reply-to:from:date:dkim-signature; bh=fXqlFZ00hZyoI5Jqwv0yTEbl8oQIq1PCEfz+v3IkzMw=; fh=3eRGdFwYIV7QHBh2MCRFFpEG34CtNay0/5tHmMdLwZA=; b=FiZJnjSJyj3BNV4db0UzCA8M2Tol7CZTaEDMLNjT57lMu72UlIH9G5htmZyP9jjiZs qeeFULZk8j4FPlG7zyjo2fkrkezmPYxMgPIHZfFeN1oO/uVi0C8aT8QSX19fYzFDJw8c 0Sxp1Vgth7094WTpLRKNAcaOn4ALKz557fGd9mDR3MywpKSbe4yGQ/wjg8rBCC23bcZB zA9kNdp4I4WgN/y8alLJPaMvAvLgjUrqiPpPXafrFZ6h74ZTm0QS6CjnnHayYpm85qMK 9mjThpfIXc89sC91Oe0SAt0ufbP9Ewja+ZBMHG5if4l46KH73KJyh8MCPMuJ1cz9QZRv 18rw==; dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@jobalertshub.com header.s=default header.b=T29Jt1hy; spf=pass (google.com: domain of bounce+noreply-[XXXX]=gmail.com@jobalertshub.com designates 164.132.135.204 as permitted sender) smtp.mailfrom="bounce+noreply-[XXXX]=gmail.com@jobalertshub.com"; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=jobalertshub.com
+Return-Path: <bounce+noreply-[XXXX]=gmail.com@jobalertshub.com>
+Received: from jobhost.jobalertshub.com (jobhost.jobalertshub.com. [164.132.135.204]) by mx.google.com with ESMTPS id 5b1f17b1804b1-4675364eb23si39581575e9.73.2025.09.19.23.07.29 for <[NAME]@gmail.com> (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256); Fri, 19 Sep 2025 23:07:29 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounce+noreply-[XXXX]=gmail.com@jobalertshub.com designates 164.132.135.204 as permitted sender) client-ip=164.132.135.204;
+Authentication-Results: mx.google.com; dkim=pass header.i=@jobalertshub.com header.s=default header.b=T29Jt1hy; spf=pass (google.com: domain of bounce+noreply-[XXXX]=gmail.com@jobalertshub.com designates 164.132.135.204 as permitted sender) smtp.mailfrom="bounce+noreply-[XXXX]=gmail.com@jobalertshub.com"; dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=jobalertshub.com
+Received: from localhost (jobhost.jobalertshub.com [164.132.135.204]) by jobhost.jobalertshub.com (Postfix) with ESMTP id E66B7C2C8366 for <[NAME]@gmail.com>; Sat, 20 Sep 2025 11:37:28 +0530 (IST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=jobalertshub.com; s=default; t=1758348448; bh=fXqlFZ00hZyoI5Jqwv0yTEbl8oQIq1PCEfz+v3IkzMw=; h=Date:From:Reply-To:To:Subject:List-Unsubscribe:From; b=T29Jt1hyRn0mYRZAhYGW33382r2N4gdu9wkC0/+hTD87dCM7tfQbq6LqYPmMLm5f8 kVCRyDAwUNj1JriAUpH2foJvTrlnTK8XRZY0AzszbxGkQN0ko3KGbeU4ko2uDj+6nk ZYgUMMUu8Q3E/hNrPQ/H8QE63DNvfTbk/ZLvZv4U=
+Date: Sat, 20 Sep 2025 11:37:28 +0530 (IST)
+From: NRL Recruitment <noreply@jobalertshub.com>
+Reply-To: NRL Recruitment <noreply@jobalertshub.com>
+To: [NAME]@gmail.com
+Message-ID: <[XXXX]@jobalertshub.com>
+Subject: Graduate Engineer Trainee & Assistant Officer Trainee Job Notification
+MIME-Version: 1.0
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: 7bit
+List-Unsubscribe: <https://jobalertshub.com/unsubscribe/list/[XXXX]?source=email-client-unsub-button>, <mailto:unsubscribe@jobalertshub.com?subject=unsubscribe_[XXXX]>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Feedback-ID: [XXXX]:JOBALERTSHUB

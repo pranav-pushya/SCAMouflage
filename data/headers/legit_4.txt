@@ -1,0 +1,29 @@
+Delivered-To: [NAME]@gmail.com
+Received: by 2002:a05:6850:930b:b0:7ac:f5f6:3769 with SMTP id hj11csp1199131nnb; Wed, 7 Oct 2026 22:20:24 -0700 (PDT)
+X-Received: by 2002:a05:693c:4089:b0:33b:c24c:d31c with SMTP id 5a478bee46e88-3515de0e076mr6227781eec.7.1791436823814; Wed, 07 Oct 2026 22:20:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791436823; cv=none; d=google.com; s=arc-20260327; b=nwnpmM67GT/DR3q0RsvwmRgx3d90D2IEnbwAY27rSBM5PYbEKmXffg4QfVw/H6UJVI 10CHDkpS4Rd9op53t4t+YaEj+qUpZ1bqn5AUK86kukTPt3IivlvNG1XYhOL61GJ+i5bF BvVcKZaeZ6lj+xGC7JRYJ0z1gmVxxVzPSDtSs8k9mVx/m3rbWmf58b27SJ8P5MVxyxHP RWMBhOZwvi5I4bZw6C7fuEK6mmp+IKP+hwWk9DzoRcWCBLTOt+HeVzlXKRRAElsZUvYT +gngDd9GSJnnRHtNobsjDFLLNgNLMzHMc/NEw1UAljkj5gtX5ylHqm4iRf0fEwxf91HE pg3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327; h=content-transfer-encoding:from:feedback-id:subject:to:cc:reply-to :date:mime-version:list-unsubscribe-post:list-unsubscribe :dkim-signature:message-id; bh=pVFB6VjImfaHwZ1Br6h9zdCAd7ElIJbqEqu1TGNEh6s=; fh=JZXqn4tUvRRowTA7Q39QXW6NUfX6DqHm68EQS0LLhFE=; b=fxfiDDoityGi+Zz7WgzxqZrDD5D5ZESXYLFCAxulUmJy9vn+RRgRQSPUr4+k4+yICa j4MC3A5m0XdvhiKsQE6kfahFM0Xm3pQ0EA0+RKJ2DLojCg2UQiSNCzBry+A9QJIJohRB 4GoPuxc46SI+ScBgNRiR91tXRLFquDzmhx2C3R+DCKV+369ZSW/1cqRQwYYOXyuA1dzV QKuwdt2UtTzFd3dow/msc3gNjIfoxs56dnaZVFyOzbA2h9hfDhgw4HuLtBHFavtl5WkC NGKFZvb//uztrUSPlwHVZ+J9vP/545yZzW2AR6lmFFU/huVMogFpRQP1rPmINeXZ6hok p5jg==; dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass header.i=@info.mcaffeine.com header.s=default header.b=qutwORZV; spf=pass (google.com: domain of rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2@ks.info.mcaffeine.com designates 103.94.241.179 as permitted sender) smtp.mailfrom="rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2@ks.info.mcaffeine.com"; dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=mcaffeine.com
+Return-Path: <rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2@ks.info.mcaffeine.com>
+Received: from smtp-179.ksplcloud.com (smtp-179.ksplcloud.com. [103.94.241.179]) by mx.google.com with ESMTPS id 5a478bee46e88-3515b06cfa8si14009599eec.27.2026.10.07.22.20.22 for <[NAME]@gmail.com> (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128); Wed, 07 Oct 2026 22:20:23 -0700 (PDT)
+Received-SPF: pass (google.com: domain of rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2@ks.info.mcaffeine.com designates 103.94.241.179 as permitted sender) client-ip=103.94.241.179;
+Authentication-Results: mx.google.com; dkim=pass header.i=@info.mcaffeine.com header.s=default header.b=qutwORZV; spf=pass (google.com: domain of rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2@ks.info.mcaffeine.com designates 103.94.241.179 as permitted sender) smtp.mailfrom="rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2@ks.info.mcaffeine.com"; dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=mcaffeine.com
+Message-ID: <6ac72817.f3b74646.1c09d6.9a6fSMTPIN_ADDED_MISSING@mx.google.com>
+DKIM-Signature: a=rsa-sha256; bh=pVFB6VjImfaHwZ1Br6h9zdCAd7ElIJbqEqu1TGNEh6s=; c=relaxed/relaxed; d=info.mcaffeine.com; h=X-Mailer-Info:List-Unsubscribe:List-Unsubscribe-Post:Received:Mime-Version:Date:Reply-To:Cc:X-Ksp-MsgID:To:Subject:Feedback-ID:X-Abuse-Reports-To:X-Kasplo-Click-Tracking-ID:From:Content-Type:Content-Transfer-Encoding; s=default; t=1791436821; v=1; b=qutwORZVWrwqukhdG75txVae/Vz+0SkDc7p/hSDBk0R6aN5PyhVXTZrCvaFVtknFc4ylhb7A Tjkd1nqFEBBJ16OzmnYtZjPVtaKxdw3ESYwQ29dD2RoeDHi7irZ+mSe5Ye9qML+4V6dYX+kqpHY c6nqfwiAVd1aSgf507wnvlUc=
+X-Mailer-Info: [XXXX]
+List-Unsubscribe: <https://kasploengine.com/unsub/[XXXX]>, <mailto:rp-mcaffeine-infomcaffeine261008-30917-ce3e6a=2u@ks.info.mcaffeine.com>
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Received: from unknown (HELO localhost) (mailclass-infomcaffeine@ks.info.mcaffeine.com@13.233.174.92) by kasploengine.com with SMTP; 8 Oct 2026 05:20:21 -0000
+Mime-Version: 1.0
+Date: Thu, 08 Oct 2026 05:20:21 +0000
+Reply-To: woot@mcaffeine.com
+Cc: 
+X-Ksp-MsgID: [XXXX]
+To: <[NAME]@gmail.com>
+Subject: =?UTF-8?q?An_update_for_you=F0=9F=98=AE,_your_order_is_still_incomplete?=
+Feedback-ID: [XXXX]
+X-Abuse-Reports-To: abuse@trans.kasplo.com
+X-Kasplo-Click-Tracking-ID: [XXXX]
+From: mCaffeine <cart@info.mcaffeine.com>
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable

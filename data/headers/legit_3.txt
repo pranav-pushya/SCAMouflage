@@ -1,0 +1,25 @@
+Delivered-To: [NAME]@gmail.com
+Received: by 2002:a05:6850:668f:b0:750:85c2:acb9 with SMTP id n15csp1506559nnn; Sun, 17 May 2026 21:13:16 -0700 (PDT)
+X-Received: by 2002:a05:620a:45a9:b0:913:dcd2:f117 with SMTP id af79cd13be357-913dcd30283mr474449385a.24.1779077596471; Sun, 17 May 2026 21:13:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779077596; cv=none; d=google.com; s=arc-20240605; b=Z7cyEnHRLLAiWX41JYYusoy+tptCWzOqevVOOgsYe30GNXYKmMyQ4CdvPKxwAOzPHe K48g46qosXpVb901cpodt637J9eVH2jbOdezBMm1kaf1VPB+PoBNt8PFoKTyWMvxQA6j ffuoOjFxxburDgGXYF9ZJO39gpDfIEXHR7sR2lE0WT9L7COVFbe+XN49s52y3D5yEN2G 87DaeI/9FG+0ZrdILYYSWdEXo55EiymeCvGYVkqOaLdhpef9cylxNd+xXZGQxbA2nWnq DgnrN0okw4omg2U5Qute8BFvhFW/Yyy2sF6oP9DzfbeJpXEsrxuiqYmhs85b/WcSSWvE 3cQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605; h=feedback-id:message-id:date:content-language:mime-version:reply-to :from:to:subject:list-unsubscribe:dkim-signature :freelancer-domain-signer; bh=PTRw2YSeivosCus+LHZnNPBeyAWhFUtUmZtfTOtVBlo=; fh=3eRGdFwYIV7QHBh2MCRFFpEG34CtNay0/5tHmMdLwZA=; b=NJDPT//OjwHOJAYDAEehN3J4F/8odaZqweXzXFr5ehKqWwuE9pKU89L8sNjIEBEFNH z7fm47sYGjPvNJIqGHzlPCp76i4U8LoH8XVXDV4Rs4l58c/CNpiequVJAjOYSLKUocmn /e2oUXbVEoox3+jm1SrWmcLwf8kDc1L40JNOD5bCfKECmCWg4EKHyWk0mxoQ5r9WKQ9L kjIMBmMMZP2/NkihQSxU+QvQGfUKS3fmOZShTlYm30oF/WoYjZeRiHvYHREm8VXS+k3Y 2QTVjQgc9hU3LO/9Utkwb/r26C8GVclsZ2AxCaDeRAds96j6j1acFRAsG8CXJ6dnwU4z HyRA==; dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; dkim=pass (test mode) header.i=@freelancer.com header.s=mail header.b=XUA3tXBE; spf=pass (google.com: domain of noreply@notifications.freelancer.com designates 174.129.202.232 as permitted sender) smtp.mailfrom=noreply@notifications.freelancer.com; dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=freelancer.com
+Return-Path: <noreply@notifications.freelancer.com>
+Received: from mail002.use.t2.freelancer.com (mail002.use.t2.freelancer.com. [174.129.202.232]) by mx.google.com with UTF8SMTPS id af79cd13be357-910bdd32fd7si1351884885a.299.2026.05.17.21.13.14 for <[NAME]@gmail.com> (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128); Sun, 17 May 2026 21:13:16 -0700 (PDT)
+Received-SPF: pass (google.com: domain of noreply@notifications.freelancer.com designates 174.129.202.232 as permitted sender) client-ip=174.129.202.232;
+Authentication-Results: mx.google.com; dkim=pass (test mode) header.i=@freelancer.com header.s=mail header.b=XUA3tXBE; spf=pass (google.com: domain of noreply@notifications.freelancer.com designates 174.129.202.232 as permitted sender) smtp.mailfrom=noreply@notifications.freelancer.com; dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=freelancer.com
+freelancer-domain-signer: signer-01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=freelancer.com; i=@freelancer.com; q=dns/txt; s=mail; t=1779077594; h=subject : to : from : date; bh=G3BYDywRWf3FDEwyOcEjyMqxfpjcH64HXFotolIPQuA=; b=XUA3tXBEWvZCFgi1hs7bq+CFyx/z7u6y52y1HsV+ulzUhn89KVIgRpGcPbTOiIX5v3lYs XvY4hJc5Mv/ywQ6K9HLCBMjN8IJMJKbwNhtNtK7SGj1hLBu1YhI/k5/A0OV1oQwaOOL+Lg7 VzlEPNKa6dZTupPHx+RqEjcB9a21wDs=
+List-Unsubscribe: <http://www.freelancer.com/bl-email/unsubscribe.php?id=[XXXX]&token=[XXXX]&subject=[REDACTED]>
+Subject: [REDACTED]
+To: [NAME]@gmail.com
+From: Freelancer.com <noreply@notifications.freelancer.com>
+Reply-To: Freelancer.com <noreply@notifications.freelancer.com>
+MIME-version: 1.0
+Content-language: en
+X-Priority: 3 (Normal)
+X-Accept-Language: en
+Content-Type: multipart/alternative; boundary="b1_ae82924dc19fe33f143130a52b4ab075"
+Date: Mon, 18 May 2026 00:13:14 -0400
+Message-Id: <noreply+mailer-6a0a91da8e90d3.35408043@freelancer.com>
+Feedback-ID: email|latest-projects-and-contests-ab-test:user|[XXXX]:tier|lpcn:freelancer
