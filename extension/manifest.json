@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "PhishShield India - Real-Time Scam & Phishing Defender",
+  "version": "1.0.0",
+  "description": "Real-time threat detection for WhatsApp, Gmail, Telegram, webmail, and URLs opened on screen. Tailored for Indian cyber scam vectors.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "http://127.0.0.1:8000/*",
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "PhishShield India",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "rules/detector-engine.js",
+        "content/content-script.js"
+      ],
+      "css": [
+        "content/content-style.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*",
+        "rules/detector-engine.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

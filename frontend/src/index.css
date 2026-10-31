@@ -11,7 +11,201 @@
     background-size: 48px 48px;
     color: #E6EDF5;
     font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
+
+  /* Base Light Mode Setup */
+  html.light body {
+    background-color: #F8FAFC !important;
+    background-image: 
+      linear-gradient(to right, #E2E8F0 1px, transparent 1px),
+      linear-gradient(to bottom, #E2E8F0 1px, transparent 1px) !important;
+    color: #0F172A !important;
+  }
+}
+
+/* ==========================================================================
+   Light Mode Theme Overrides
+   Mapped directly to PhishShield's cyber palette for clean, accessible light mode
+   ========================================================================== */
+
+html.light {
+  color-scheme: light;
+}
+
+/* Backgrounds */
+html.light .bg-\[\#070B12\] {
+  background-color: #F8FAFC !important;
+}
+
+html.light .bg-\[\#070B12\]\/90 {
+  background-color: rgba(248, 250, 252, 0.94) !important;
+}
+
+html.light .bg-\[\#070B12\]\/80 {
+  background-color: rgba(248, 250, 252, 0.88) !important;
+}
+
+html.light .bg-\[\#0A111C\] {
+  background-color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#0A111C\]\/80 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+}
+
+html.light .bg-\[\#0A111C\]\/95 {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+}
+
+html.light .bg-\[\#0F1A2A\] {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-\[\#1E293B\] {
+  background-color: #E2E8F0 !important;
+}
+
+html.light .bg-\[\#1B2433\] {
+  background-color: #F1F5F9 !important;
+}
+
+/* Borders & Dividers */
+html.light .border-\[\#0E1622\] {
+  border-color: #E2E8F0 !important;
+}
+
+html.light .border-\[\#243247\] {
+  border-color: #CBD5E1 !important;
+}
+
+html.light .border-\[\#1E3A4C\] {
+  border-color: #94A3B8 !important;
+}
+
+html.light .border-\[\#1B2433\] {
+  border-color: #E2E8F0 !important;
+}
+
+/* Text Colors */
+html.light .text-\[\#E6EDF5\] {
+  color: #0F172A !important;
+}
+
+html.light .text-\[\#93A1B5\] {
+  color: #475569 !important;
+}
+
+/* Accent & Links */
+html.light .text-\[\#22D3EE\] {
+  color: #0284C7 !important;
+}
+
+html.light a.text-\[\#22D3EE\]:hover {
+  color: #0369A1 !important;
+}
+
+html.light .text-\[\#67E8F9\] {
+  color: #0369A1 !important;
+}
+
+/* Primary Action Buttons */
+html.light a.bg-\[\#22D3EE\],
+html.light button.bg-\[\#22D3EE\] {
+  background-color: #0284C7 !important;
+  color: #FFFFFF !important;
+}
+
+html.light a.bg-\[\#22D3EE\]:hover,
+html.light button.bg-\[\#22D3EE\]:hover {
+  background-color: #0369A1 !important;
+}
+
+/* Risk Card Colors (High, Medium, Safe) */
+/* High Risk (Red/Rose) */
+html.light .bg-\[\#2A0F1B\] {
+  background-color: #FEF2F2 !important;
+}
+
+html.light .border-\[\#7F1D3A\],
+html.light .border-\[\#4A1424\] {
+  border-color: #FECACA !important;
+}
+
+html.light .text-\[\#FB7185\],
+html.light .text-\[\#FDA4AF\] {
+  color: #B91C1C !important;
+}
+
+/* Medium Risk (Amber) */
+html.light .bg-\[\#2A1B07\] {
+  background-color: #FFFBEB !important;
+}
+
+html.light .border-\[\#78350F\] {
+  border-color: #FDE68A !important;
+}
+
+html.light .text-\[\#FBBF24\] {
+  color: #B45309 !important;
+}
+
+/* Safe / Low Risk (Emerald/Green) */
+html.light .bg-\[\#0B2018\],
+html.light .bg-\[\#071F18\] {
+  background-color: #F0FDF4 !important;
+}
+
+html.light .border-\[\#14532D\],
+html.light .border-\[\#065F46\] {
+  border-color: #BBF7D0 !important;
+}
+
+html.light .text-\[\#34D399\] {
+  color: #15803D !important;
+}
+
+/* Hover States in Light Mode */
+html.light .hover\:bg-\[\#0A111C\]:hover {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .hover\:bg-\[\#0F1A2A\]:hover {
+  background-color: #E2E8F0 !important;
+}
+
+html.light .hover\:text-\[\#E6EDF5\]:hover {
+  color: #0F172A !important;
+}
+
+html.light .hover\:text-\[\#22D3EE\]:hover {
+  color: #0284C7 !important;
+}
+
+/* Input Fields & Textareas */
+html.light input,
+html.light textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Preformatted and Code blocks */
+html.light pre {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Subtle elevation for cards in light mode */
+html.light .bg-\[\#0A111C\],
+html.light .bg-\[\#0F1A2A\] {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
 }
 
 /* Scan line animation for loading state */
@@ -37,6 +231,11 @@
   background: linear-gradient(90deg, transparent, #22D3EE, transparent);
   box-shadow: 0 0 12px #22D3EE;
   animation: scanline 1.8s ease-in-out infinite;
+}
+
+html.light .animate-scanline {
+  background: linear-gradient(90deg, transparent, #0284C7, transparent);
+  box-shadow: 0 0 12px #0284C7;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A111C" />
+      <stop offset="100%" stop-color="#070B12" />
+    </linearGradient>
+    <linearGradient id="cyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#22D3EE" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <rect width="128" height="128" rx="28" fill="#070B12" />
+  
+  <!-- Outer Shield Path -->
+  <path d="M64 16 L104 32 C104 76 64 112 64 112 C64 112 24 76 24 32 Z" 
+        fill="url(#shieldGrad)" 
+        stroke="url(#cyanGlow)" 
+        stroke-width="5" 
+        stroke-linejoin="round" />
+  
+  <!-- Inner Shield Accent -->
+  <path d="M64 26 L94 38 C94 72 64 98 64 98 C64 98 34 72 34 38 Z" 
+        fill="#0F1A2A" 
+        stroke="#1E3A4C" 
+        stroke-width="2" />
+
+  <!-- Verification Checkmark / Pulse -->
+  <path d="M48 62 L58 72 L80 48" 
+        fill="none" 
+        stroke="#22D3EE" 
+        stroke-width="6" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+</svg>
