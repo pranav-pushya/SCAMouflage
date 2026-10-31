@@ -7,6 +7,7 @@ are strictly mocked.
 from unittest.mock import MagicMock, patch
 import pytest
 
+from engines.url_config import RULE_WEIGHTS
 from engines.url_engine import (
     analyze_url,
     extract_features,
@@ -23,7 +24,6 @@ def block_external_network():
     with patch("requests.get") as mock_get, patch("requests.head") as mock_head, patch("socket.getaddrinfo") as mock_dns:
         # Default mock: DNS returns a benign public IP
         mock_dns.return_value = [(2, 1, 0, "", ("93.184.216.34", 80))]
-        # Default mock: 404 for random HTTP requests
         mock_resp = MagicMock()
         mock_resp.status_code = 404
         mock_resp.json.return_value = {}
@@ -51,8 +51,23 @@ def test_official_domain_guard_subdomain():
     assert result["flags"] == []
 
 
+def test_sbi_spoofed_domains_not_treated_as_official():
+    """sbi.co.in.evil.xyz and evilsbi.co.in must NEVER be protected by official domain guard."""
+    # Subdomain spoof on third-party registered domain
+    res_sub = analyze_url("http://sbi.co.in.evil.xyz")
+    assert res_sub["score"] > 10
+    assert any(f["code"] == "BRAND_LOOKALIKE" for f in res_sub["flags"])
+    assert res_sub["meta"]["registered_domain"] == "evil.xyz"
+
+    # Prefix spoof on legitimate TLD
+    res_pre = analyze_url("http://evilsbi.co.in")
+    assert res_pre["score"] > 10
+    assert any(f["code"] == "BRAND_LOOKALIKE" for f in res_pre["flags"])
+    assert res_pre["meta"]["registered_domain"] == "evilsbi.co.in"
+
+
 # ---------------------------------------------------------------------------
-# 2. Brand lookalike detection
+# 2. Brand lookalike detection & scoring
 # ---------------------------------------------------------------------------
 
 def test_brand_lookalike_token_match():
@@ -60,7 +75,7 @@ def test_brand_lookalike_token_match():
     result = analyze_url("http://sbi-kyc-update.xyz")
     flag_codes = [f["code"] for f in result["flags"]]
     assert "BRAND_LOOKALIKE" in flag_codes
-    assert result["score"] >= 35
+    assert result["score"] >= 70
 
     # Check user-facing reason format
     lookalike_flag = next(f for f in result["flags"] if f["code"] == "BRAND_LOOKALIKE")
@@ -68,11 +83,34 @@ def test_brand_lookalike_token_match():
     assert len(lookalike_flag["reason"]) <= 80
 
 
+def test_brand_lookalike_weight_by_itself_and_total():
+    """BRAND_LOOKALIKE weight must be >= 40 by itself and sbi-kyc-update.xyz >= 70 total."""
+    assert RULE_WEIGHTS["BRAND_LOOKALIKE"] >= 40
+
+    result = analyze_url("http://sbi-kyc-update.xyz")
+    assert result["score"] >= 70
+
+    # Ensure official domain guard is still unaffected
+    official_res = analyze_url("https://sbi.co.in")
+    assert official_res["score"] <= 10
+    assert official_res["flags"] == []
+
+
 def test_brand_lookalike_rapidfuzz_near_miss():
     """Near-miss typos detected via RapidFuzz trigger BRAND_LOOKALIKE."""
     result = analyze_url("http://sbii.xyz")
     flag_codes = [f["code"] for f in result["flags"]]
     assert "BRAND_LOOKALIKE" in flag_codes
+
+
+def test_onlinesbi_kyc_flagged_as_brand_lookalike():
+    """onlinesbi-kyc.xyz is flagged as BRAND_LOOKALIKE when brand list contains onlinesbi.sbi."""
+    result = analyze_url("http://onlinesbi-kyc.xyz")
+    flag_codes = [f["code"] for f in result["flags"]]
+    assert "BRAND_LOOKALIKE" in flag_codes
+    assert result["score"] >= 70
+    reason = next(f["reason"] for f in result["flags"] if f["code"] == "BRAND_LOOKALIKE")
+    assert "SBI" in reason
 
 
 # ---------------------------------------------------------------------------
@@ -85,6 +123,24 @@ def test_ip_address_host():
     flag_codes = [f["code"] for f in result["flags"]]
     assert "IP_ADDRESS_HOST" in flag_codes
     assert result["score"] >= 25
+    # MANY_SUBDOMAINS must not count IP octets
+    assert "MANY_SUBDOMAINS" not in flag_codes
+
+
+def test_ip_literal_encodings_detected_as_ip_host():
+    """Decimal, hex, octal, and dotted-quad IP hosts are flagged as IP_ADDRESS_HOST without MANY_SUBDOMAINS."""
+    cases = [
+        "http://2130706433",       # Decimal integer encoding of 127.0.0.1
+        "http://0x7f000001",       # Hex encoding of 127.0.0.1
+        "http://017700000001",     # Octal encoding of 127.0.0.1
+        "http://0177.0.0.1",       # Dotted octal encoding
+        "http://198.51.100.1",     # Standard dotted-quad
+    ]
+    for url in cases:
+        res = analyze_url(url)
+        codes = [f["code"] for f in res["flags"]]
+        assert "IP_ADDRESS_HOST" in codes, f"Failed for {url}"
+        assert "MANY_SUBDOMAINS" not in codes, f"MANY_SUBDOMAINS wrongly fired for IP host {url}"
 
 
 def test_punycode_host():
@@ -124,7 +180,7 @@ def test_schemeless_url_handled():
 
 
 # ---------------------------------------------------------------------------
-# 6. Shortener redirect unwrapping
+# 6. Shortener redirect unwrapping & SSRF checks
 # ---------------------------------------------------------------------------
 
 def test_shortener_redirect_to_lookalike():
@@ -143,8 +199,30 @@ def test_shortener_redirect_to_lookalike():
     assert result["meta"]["final_destination"] == "http://hdfc-bank-verify.xyz"
 
 
+def test_every_redirect_hop_is_ssrf_checked():
+    """Every hop in a redirect chain is validated; unsafe destination halts chain before request."""
+    # Hop 1 redirects to safe hop, Hop 2 attempts redirect to 127.0.0.1
+    hop1_resp = MagicMock()
+    hop1_resp.status_code = 301
+    hop1_resp.headers = {"Location": "http://intermediate-hop.com/link"}
+
+    hop2_resp = MagicMock()
+    hop2_resp.status_code = 301
+    hop2_resp.headers = {"Location": "http://127.0.0.1/admin"}
+
+    with patch("requests.Session.head") as mock_session_head, \
+         patch("requests.Session.get") as mock_session_get:
+        mock_session_head.side_effect = [hop1_resp, hop2_resp]
+
+        dest, hops = unwrap_redirects("http://bit.ly/test-ssrf-chain-hop")
+
+        # Must stop when encountering 127.0.0.1 and never request it
+        assert dest != "http://127.0.0.1/admin"
+        assert hops == 1
+
+
 # ---------------------------------------------------------------------------
-# 7. SSRF Guard
+# 7. SSRF Guard & Zero network calls
 # ---------------------------------------------------------------------------
 
 def test_ssrf_guard_blocks_private_and_loopback_ips():
@@ -152,6 +230,8 @@ def test_ssrf_guard_blocks_private_and_loopback_ips():
     # Loopback
     assert not is_ssrf_safe_url("http://127.0.0.1/admin")
     assert not is_ssrf_safe_url("http://localhost/admin")
+    assert not is_ssrf_safe_url("http://2130706433/admin")
+    assert not is_ssrf_safe_url("http://0x7f000001/admin")
 
     # Private ranges
     assert not is_ssrf_safe_url("http://10.0.0.1/status")
@@ -172,6 +252,37 @@ def test_ssrf_guard_blocks_private_and_loopback_ips():
         assert is_ssrf_safe_url("https://example.com:443/")
 
 
+def test_zero_network_calls_for_private_and_encoded_ips():
+    """127.0.0.1, localhost, 2130706433, 0x7f000001, 169.254.169.254 and private DNS trigger zero network requests."""
+    targets = [
+        "127.0.0.1",
+        "localhost",
+        "http://2130706433",
+        "http://0x7f000001",
+        "http://169.254.169.254",
+    ]
+
+    with patch("requests.get") as mock_get, \
+         patch("requests.head") as mock_head, \
+         patch("requests.Session.get") as mock_sget, \
+         patch("requests.Session.head") as mock_shead:
+
+        for target in targets:
+            analyze_url(target)
+            unwrap_redirects(target)
+
+        # Mock a hostname that resolves to a private IP
+        with patch("socket.getaddrinfo") as mock_dns:
+            mock_dns.return_value = [(2, 1, 0, "", ("10.0.0.1", 80))]
+            analyze_url("http://private-internal-site.test")
+            unwrap_redirects("http://private-internal-site.test")
+
+        mock_get.assert_not_called()
+        mock_head.assert_not_called()
+        mock_sget.assert_not_called()
+        mock_shead.assert_not_called()
+
+
 # ---------------------------------------------------------------------------
 # 8. Network and RDAP failure handling
 # ---------------------------------------------------------------------------
@@ -183,7 +294,6 @@ def test_network_and_rdap_failure_gracefully_skipped():
 
     assert isinstance(result, dict)
     assert result["meta"]["domain_age_days"] is None
-    # Still flagged by static rules (e.g. SUSPICIOUS_TLD, NO_HTTPS)
     assert result["score"] >= 0
 
 
@@ -207,15 +317,20 @@ def test_rdap_recent_domain_flagged():
 
 
 # ---------------------------------------------------------------------------
-# 9. Empty and garbage inputs
+# 9. Empty and unparseable inputs
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("bad_input", ["", "   ", "???", None, 12345])
+@pytest.mark.parametrize("bad_input", ["", "   ", "???", "asdf", None, 12345])
 def test_empty_and_garbage_input_returns_valid_contract(bad_input):
-    """Empty or malformed inputs return score 0 and valid contract dict without raising."""
+    """Empty or unparseable inputs return score: null, INVALID_INPUT flag, and valid contract dict."""
     result = analyze_url(bad_input)
-    assert result["score"] == 0
-    assert result["flags"] == []
+    assert result["score"] is None
+    assert result["flags"] == [
+        {
+            "code": "INVALID_INPUT",
+            "reason": "URL samajh nahi aaya",
+        }
+    ]
     assert "meta" in result
     assert result["meta"]["final_destination"] is None
     assert result["meta"]["domain_age_days"] is None
@@ -241,7 +356,7 @@ def test_missing_model_file_fallback():
 # ---------------------------------------------------------------------------
 
 def test_score_is_always_int_between_0_and_100():
-    """Scores must always be strictly clamped integers between 0 and 100."""
+    """Scores must always be strictly clamped integers between 0 and 100 for valid URLs."""
     urls = [
         "https://sbi.co.in",
         "http://sbi-kyc-update.xyz",

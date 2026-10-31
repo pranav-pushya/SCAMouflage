@@ -13,7 +13,7 @@ import socket
 import urllib.parse
 from collections import Counter
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import idna
 import joblib
@@ -71,13 +71,75 @@ def _get_registered_domain(ext: Any) -> str:
     return getattr(ext, "registered_domain", "") or ""
 
 
-def _is_ip_host(host: str) -> bool:
-    """Check whether a host string is a valid IPv4 or IPv6 address."""
+def _parse_ip_host(host: str) -> Optional[Any]:
+    """Parse host string into IPv4/IPv6 address object supporting dotted-quad, decimal, hex, and octal notations."""
+    if not host or not isinstance(host, str):
+        return None
+
+    h = host.strip("[]").strip()
+    if not h:
+        return None
+
+    # 1. Standard ipaddress parse (dotted-quad IPv4 or standard IPv6)
     try:
-        ipaddress.ip_address(host)
-        return True
+        return ipaddress.ip_address(h)
     except ValueError:
-        return False
+        pass
+
+    # 2. Support integer DWORD, hex (0x...), octal (0...), or dotted mixed notations
+    parts = h.split(".")
+    if len(parts) > 4 or not parts or not all(parts):
+        return None
+
+    try:
+        nums = []
+        for p in parts:
+            if p.lower().startswith("0x"):
+                nums.append(int(p, 16))
+            elif p.startswith("0") and len(p) > 1 and p.isdigit():
+                nums.append(int(p, 8))
+            elif p.isdigit():
+                nums.append(int(p, 10))
+            else:
+                return None
+
+        if len(nums) == 1:
+            val = nums[0]
+            if 0 <= val <= 0xFFFFFFFF:
+                return ipaddress.IPv4Address(val)
+        elif len(nums) == 4:
+            if all(0 <= n <= 255 for n in nums):
+                val = (nums[0] << 24) | (nums[1] << 16) | (nums[2] << 8) | nums[3]
+                return ipaddress.IPv4Address(val)
+        elif len(nums) == 2:
+            if 0 <= nums[0] <= 255 and 0 <= nums[1] <= 0xFFFFFF:
+                return ipaddress.IPv4Address((nums[0] << 24) | nums[1])
+        elif len(nums) == 3:
+            if 0 <= nums[0] <= 255 and 0 <= nums[1] <= 255 and 0 <= nums[2] <= 0xFFFF:
+                return ipaddress.IPv4Address((nums[0] << 24) | (nums[1] << 16) | nums[2])
+    except Exception:
+        return None
+
+    return None
+
+
+def _is_ip_host(host: str) -> bool:
+    """Check whether a host string is a valid IPv4 or IPv6 address in any encoding."""
+    return _parse_ip_host(host) is not None
+
+
+def _get_brand_keywords(brand: Dict[str, Any]) -> Set[str]:
+    """Collect brand keywords from explicit keyword list and official domain stems."""
+    keywords = set()
+    for kw in brand.get("keywords", []):
+        if kw:
+            keywords.add(kw.lower())
+    for off in brand.get("official_domains", []):
+        if off:
+            off_domain = _EXTRACTOR(f"http://{off}").domain
+            if off_domain and len(off_domain) >= 3:
+                keywords.add(off_domain.lower())
+    return keywords
 
 
 def normalize_url(url: str) -> str:
@@ -106,7 +168,7 @@ def normalize_url(url: str) -> str:
         hostname = (parsed.hostname or "").lower()
 
         # Handle Internationalized Domain Names (IDN) to Punycode
-        if hostname:
+        if hostname and not _is_ip_host(hostname):
             try:
                 hostname = idna.encode(hostname).decode("ascii")
             except Exception:
@@ -134,7 +196,10 @@ def normalize_url(url: str) -> str:
 
 
 def is_ssrf_safe_url(url: str) -> bool:
-    """Ensure destination does not resolve to private, loopback, or non-standard ports."""
+    """Ensure destination does not resolve to private, loopback, or non-standard ports.
+
+    Validates both raw input and resolved DNS addresses across all returned IPs.
+    """
     try:
         parsed = urllib.parse.urlsplit(url)
         scheme = parsed.scheme.lower()
@@ -149,14 +214,14 @@ def is_ssrf_safe_url(url: str) -> bool:
         if not hostname:
             return False
 
-        # Check direct localhost or loopback names
+        # Reject localhost or loopback name aliases
         h_lower = hostname.lower()
         if h_lower == "localhost" or h_lower.endswith(".localhost"):
             return False
 
-        # Check direct IP addresses
-        if _is_ip_host(hostname):
-            ip_obj = ipaddress.ip_address(hostname)
+        # Check encoded or literal IP addresses (dotted-quad, hex, decimal, octal)
+        ip_obj = _parse_ip_host(hostname)
+        if ip_obj is not None:
             if (
                 ip_obj.is_private
                 or ip_obj.is_loopback
@@ -167,14 +232,19 @@ def is_ssrf_safe_url(url: str) -> bool:
             ):
                 return False
 
-        # Resolve host to verify all bound IPs
-        addr_info = socket.getaddrinfo(hostname, None)
+        # Resolve host to verify all bound IPs via socket.getaddrinfo
+        try:
+            addr_info = socket.getaddrinfo(hostname, None)
+        except Exception:
+            # If DNS resolution fails and host was not a valid public IP literal, block
+            return False
+
         if not addr_info:
             return False
 
         for item in addr_info:
             ip_str = item[4][0]
-            ip = ipaddress.ip_address(ip_str)
+            ip = _parse_ip_host(ip_str) or ipaddress.ip_address(ip_str)
             if (
                 ip.is_private
                 or ip.is_loopback
@@ -204,6 +274,7 @@ def unwrap_redirects(url: str) -> Tuple[Optional[str], int]:
 
     try:
         while hops < MAX_REDIRECT_HOPS:
+            # SSRF check on every hop BEFORE making any network request
             if not is_ssrf_safe_url(current_url):
                 break
 
@@ -244,6 +315,9 @@ def unwrap_redirects(url: str) -> Tuple[Optional[str], int]:
                     if not location:
                         break
                     next_url = urllib.parse.urljoin(current_url, location)
+                    # SSRF check on next hop: stop immediately if target is unsafe
+                    if not is_ssrf_safe_url(next_url):
+                        break
                     hops += 1
                     current_url = next_url
                 else:
@@ -260,7 +334,11 @@ def unwrap_redirects(url: str) -> Tuple[Optional[str], int]:
 
 def get_domain_age_days(registered_domain: str) -> Optional[int]:
     """Query RDAP for domain registration date and calculate age in days."""
-    if not registered_domain or _is_ip_host(registered_domain):
+    if not registered_domain or _is_ip_host(registered_domain) or registered_domain == "localhost":
+        return None
+
+    # Never query RDAP for non-SSRF-safe domains
+    if not is_ssrf_safe_url(f"http://{registered_domain}"):
         return None
 
     if registered_domain in _RDAP_CACHE:
@@ -325,8 +403,8 @@ def extract_features(url: str) -> Dict[str, Any]:
                 or any(host == off or host.endswith("." + off) for off in official_list)
             )
             if not is_off:
-                for kw in b.get("keywords", []):
-                    kw_clean = kw.lower()
+                brand_keywords = _get_brand_keywords(b)
+                for kw_clean in brand_keywords:
                     if kw_clean in host_tokens or kw_clean in domain_part:
                         has_brand_keyword = 1
                         break
@@ -353,7 +431,7 @@ def extract_features(url: str) -> Dict[str, Any]:
             "num_digits": digits,
             "digit_ratio": round(digits / h_len, 4),
             "entropy": round(entropy, 4),
-            "subdomain_count": len([l for l in host.split(".") if l]),
+            "subdomain_count": 0 if is_ip else len([l for l in host.split(".") if l]),
             "is_punycode": 1 if "xn--" in host else 0,
             "is_ip": is_ip,
             "has_at_symbol": 1 if "@" in (parsed.netloc or "") else 0,
@@ -387,7 +465,8 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
     host = (parsed.hostname or "").lower()
     ext = _EXTRACTOR(normalized_url)
     registered_domain = _get_registered_domain(ext)
-    if not registered_domain and _is_ip_host(host):
+    is_ip = _is_ip_host(host)
+    if not registered_domain and is_ip:
         registered_domain = host
 
     # 1. Official domain check
@@ -406,8 +485,8 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
         # Protected bank/official brand site: cap score low, add no risky flags
         return min(score, OFFICIAL_DOMAIN_MAX_SCORE), [], True, registered_domain
 
-    # 2. IP address host
-    if _is_ip_host(host):
+    # 2. IP address host (dotted-quad, hex, decimal, octal, IPv6)
+    if is_ip:
         flags.append({
             "code": "IP_ADDRESS_HOST",
             "reason": "Website domain ke bajaye IP address use kar rahi hai",
@@ -430,14 +509,15 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
         })
         score += RULE_WEIGHTS["AT_SYMBOL"]
 
-    # 5. Many subdomains (4 or more dot-separated labels)
-    labels = [l for l in host.split(".") if l]
-    if len(labels) >= 4:
-        flags.append({
-            "code": "MANY_SUBDOMAINS",
-            "reason": "Host me zaroorat se zyada subdomains hain",
-        })
-        score += RULE_WEIGHTS["MANY_SUBDOMAINS"]
+    # 5. Many subdomains (4 or more dot-separated labels, skipped when host is an IP)
+    if not is_ip:
+        labels = [l for l in host.split(".") if l]
+        if len(labels) >= 4:
+            flags.append({
+                "code": "MANY_SUBDOMAINS",
+                "reason": "Host me zaroorat se zyada subdomains hain",
+            })
+            score += RULE_WEIGHTS["MANY_SUBDOMAINS"]
 
     # 6. Many hyphens in host (3 or more)
     if host.count("-") >= 3:
@@ -488,8 +568,8 @@ def _evaluate_rules_and_brands(normalized_url: str) -> Tuple[int, List[Dict[str,
             continue
 
         matched_brand = False
-        for kw in b.get("keywords", []):
-            kw_clean = kw.lower()
+        brand_keywords = _get_brand_keywords(b)
+        for kw_clean in brand_keywords:
             # Token match in host or substring inside the domain label
             if kw_clean in host_tokens or kw_clean in domain_part:
                 matched_brand = True
@@ -530,6 +610,23 @@ def _load_ml_model() -> Optional[Dict[str, Any]]:
     return _MODEL_CACHE
 
 
+def _is_valid_url_target(normalized_url: str, host: str, registered_domain: str, ext: Any) -> bool:
+    """Determine whether the parsed input contains a valid parseable target (domain or IP)."""
+    if not host:
+        return False
+    # Valid IP address literal in dotted-quad, decimal, hex, octal, or IPv6
+    if _is_ip_host(host):
+        return True
+    # Localhost is a recognized special host
+    if host.lower() == "localhost" or host.lower().endswith(".localhost"):
+        return True
+    # Must have a valid public suffix / registered domain (e.g. example.com, sbi.co.in)
+    suffix = getattr(ext, "suffix", "") or ""
+    if registered_domain or suffix:
+        return True
+    return False
+
+
 def analyze_url(url: str) -> Dict[str, Any]:
     """Analyze a suspicious URL for phishing signals.
 
@@ -537,13 +634,36 @@ def analyze_url(url: str) -> Dict[str, Any]:
     Guaranteed to NEVER raise an unhandled exception.
     """
     try:
-        normalized_url = normalize_url(url)
-        if not normalized_url or not isinstance(url, str) or not url.strip():
+        if not isinstance(url, str) or not url.strip():
             return {
-                "score": 0,
-                "flags": [],
+                "score": None,
+                "flags": [
+                    {
+                        "code": "INVALID_INPUT",
+                        "reason": "URL samajh nahi aaya",
+                    }
+                ],
                 "meta": {
-                    "normalized_url": normalized_url,
+                    "normalized_url": url if isinstance(url, str) else "",
+                    "registered_domain": "",
+                    "final_destination": None,
+                    "domain_age_days": None,
+                    "ml_probability": None,
+                },
+            }
+
+        normalized_url = normalize_url(url)
+        if not normalized_url:
+            return {
+                "score": None,
+                "flags": [
+                    {
+                        "code": "INVALID_INPUT",
+                        "reason": "URL samajh nahi aaya",
+                    }
+                ],
+                "meta": {
+                    "normalized_url": "",
                     "registered_domain": "",
                     "final_destination": None,
                     "domain_age_days": None,
@@ -556,11 +676,16 @@ def analyze_url(url: str) -> Dict[str, Any]:
         ext = _EXTRACTOR(normalized_url)
         initial_reg_domain = _get_registered_domain(ext)
 
-        # Reject garbage inputs lacking any valid host or registered domain
-        if not host or (not initial_reg_domain and not _is_ip_host(host)):
+        # Reject unparseable inputs lacking any valid host, IP, or registered domain
+        if not _is_valid_url_target(normalized_url, host, initial_reg_domain, ext):
             return {
-                "score": 0,
-                "flags": [],
+                "score": None,
+                "flags": [
+                    {
+                        "code": "INVALID_INPUT",
+                        "reason": "URL samajh nahi aaya",
+                    }
+                ],
                 "meta": {
                     "normalized_url": normalized_url,
                     "registered_domain": initial_reg_domain,
@@ -614,8 +739,16 @@ def analyze_url(url: str) -> Dict[str, Any]:
                                 flags.append(f)
                                 rule_score += RULE_WEIGHTS.get(f["code"], 0)
 
-        # Domain age query via RDAP (only for non-official, non-IP domains)
-        if not is_official and registered_domain and not _is_ip_host(host):
+        # Domain age query via RDAP (only for non-official, non-IP, public domains)
+        if (
+            not is_official
+            and registered_domain
+            and not _is_ip_host(host)
+            and not _is_ip_host(registered_domain)
+            and host != "localhost"
+            and registered_domain != "localhost"
+            and is_ssrf_safe_url(f"http://{registered_domain}")
+        ):
             domain_age_days = get_domain_age_days(registered_domain)
             if domain_age_days is not None:
                 if domain_age_days < 30:
@@ -675,9 +808,15 @@ def analyze_url(url: str) -> Dict[str, Any]:
 
     except Exception:
         # Engine contract: must never raise; on unexpected failure return safe defaults
+        is_bad = not isinstance(url, str) or not url.strip()
         return {
-            "score": 0,
-            "flags": [],
+            "score": None if is_bad else 0,
+            "flags": [
+                {
+                    "code": "INVALID_INPUT",
+                    "reason": "URL samajh nahi aaya",
+                }
+            ] if is_bad else [],
             "meta": {
                 "normalized_url": url if isinstance(url, str) else "",
                 "registered_domain": "",
