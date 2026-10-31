@@ -1,0 +1,25 @@
+# Environment variables
+.env
+*.env
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Raw data folders
+data/urls/raw/
+data/**/raw/
+
+# Keep gitkeep files tracked
+!.gitkeep
