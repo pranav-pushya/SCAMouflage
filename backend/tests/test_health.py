@@ -24,7 +24,7 @@ def test_analyze_contract_keys():
 
     data = response.json()
     # Check top-level contract keys
-    assert data["dummy"] is True
+    assert data["dummy"] is False
     assert "verdict" in data
     assert "score" in data
     assert "engines" in data
