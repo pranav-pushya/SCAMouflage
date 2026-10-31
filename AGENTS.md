@@ -4,7 +4,7 @@ What: a 24-hour hackathon project (GRAVITON 2026, PS 02: phishing and scam detec
 
 Architecture: React frontend -> FastAPI POST /analyze -> three independent engines (url, text, header) -> fusion -> response.
 
-Stack (do not add other frameworks): Python 3.11, FastAPI, scikit-learn, pandas, rapidfuzz, tldextract, requests, idna, joblib, pytest, python-dotenv. Frontend: React + Vite + Tailwind CSS v3. LLM: Groq API, backend only, key in backend .env, never in the frontend.
+Stack (do not add other frameworks): Python 3.11, FastAPI, scikit-learn, pandas, rapidfuzz, tldextract, requests, idna, joblib, pytest, python-dotenv. Frontend: React + Vite + Tailwind CSS v3 + react-router-dom (HashRouter). LLM: Groq API, backend only, key in backend .env, never in the frontend.
 
 JSON contract:
 - Request: {"type": "auto|sms|url|header", "content": "..."}

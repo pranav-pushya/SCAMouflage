@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #070B12;
+    background-image: 
+      linear-gradient(to right, #0E1622 1px, transparent 1px),
+      linear-gradient(to bottom, #0E1622 1px, transparent 1px);
+    background-size: 48px 48px;
+    color: #E6EDF5;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Scan line animation for loading state */
+@keyframes scanline {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 98%;
+    opacity: 0.2;
+  }
+}
+
+.animate-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #22D3EE, transparent);
+  box-shadow: 0 0 12px #22D3EE;
+  animation: scanline 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scanline {
+    animation: none;
+    display: none;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
