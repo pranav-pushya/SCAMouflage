@@ -1,0 +1,28 @@
+[
+  {
+    "_comment": "TEMPORARY, to be replaced by teammate real dataset",
+    "name": "SBI",
+    "official_domains": ["sbi.co.in", "onlinesbi.sbi"],
+    "keywords": ["sbi", "onlinesbi"]
+  },
+  {
+    "name": "HDFC Bank",
+    "official_domains": ["hdfcbank.com"],
+    "keywords": ["hdfc", "hdfcbank"]
+  },
+  {
+    "name": "ICICI Bank",
+    "official_domains": ["icicibank.com"],
+    "keywords": ["icici", "icicibank"]
+  },
+  {
+    "name": "Paytm",
+    "official_domains": ["paytm.com"],
+    "keywords": ["paytm", "paytmbank"]
+  },
+  {
+    "name": "India Post",
+    "official_domains": ["indiapost.gov.in"],
+    "keywords": ["indiapost", "indiapostpayments"]
+  }
+]
