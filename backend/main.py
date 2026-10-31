@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from engines.footprint_engine import analyze_footprint
 from engines.header_engine import analyze_header
 from engines.text_engine import analyze_text
 from engines.url_engine import analyze_url
@@ -20,7 +21,7 @@ app = FastAPI(
     version="0.2.0",
 )
 
-# Configure CORS so Vite dev server can call this API
+# Configure CORS so Vite dev server and Chrome extension can call this API
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -29,6 +30,7 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"^chrome-extension://.*$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -42,10 +44,27 @@ class AnalyzeRequest(BaseModel):
     content: str = Field(..., min_length=1, description="Input text, URL, or header to analyze")
 
 
+class FootprintRequest(BaseModel):
+    """Payload schema for /footprint."""
+
+    target: str = Field(..., min_length=1, description="Domain, host, or URL to inspect")
+
+
 @app.get("/health")
 def health() -> dict:
     """Basic health check endpoint."""
     return {"status": "ok"}
+
+
+@app.post("/footprint")
+def inspect_footprint(payload: FootprintRequest) -> dict:
+    """Perform passive infrastructure reconnaissance on a target URL or domain."""
+    if not payload.target or not payload.target.strip():
+        raise HTTPException(
+            status_code=422,
+            detail="Target must be a non-empty string",
+        )
+    return analyze_footprint(payload.target)
 
 
 @app.post("/analyze")
