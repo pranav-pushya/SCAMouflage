@@ -1,6 +1,6 @@
 /**
  * PhishShield India - Injected UI Styles
- * Fully scoped under #ps-floating-btn, #ps-inspector-card, #ps-url-banner
+ * Fully scoped under #ps-page-scan-fab, #ps-page-scan-modal, #ps-floating-btn, #ps-inspector-card, #ps-url-banner
  * Matches PhishShield Cyber Dark & Clean Light design themes.
  */
 
@@ -16,7 +16,310 @@
   text-shadow: none !important;
 }
 
-/* ================= FLOATING BUTTON ================= */
+/* ================= 1. FLOATING "SCAN PAGE" BUTTON (FAB) ================= */
+#ps-page-scan-fab {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 2147483640 !important;
+  animation: psFabEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.ps-fab-main-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 16px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+  outline: none !important;
+}
+
+/* Dark Theme FAB */
+.ps-theme-dark .ps-fab-main-btn {
+  background: #0A111C !important;
+  color: #22D3EE !important;
+  border: 1.5px solid #1E3A4C !important;
+}
+.ps-theme-dark .ps-fab-main-btn:hover {
+  background: #0F1A2A !important;
+  border-color: #22D3EE !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.3) !important;
+}
+
+/* Light Theme FAB */
+.ps-theme-light .ps-fab-main-btn {
+  background: #FFFFFF !important;
+  color: #0284C7 !important;
+  border: 1.5px solid #CBD5E1 !important;
+}
+.ps-theme-light .ps-fab-main-btn:hover {
+  background: #F8FAFC !important;
+  border-color: #0284C7 !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25) !important;
+}
+
+.ps-fab-shield-icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.ps-fab-label {
+  font-family: monospace, monospace !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+}
+
+.ps-fab-scanning {
+  opacity: 0.8 !important;
+  pointer-events: none !important;
+  animation: psPulseGlow 1s infinite alternate !important;
+}
+
+/* ================= 2. ON-SCREEN PAGE SCAN REPORT MODAL ================= */
+#ps-page-scan-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483646 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+}
+
+.ps-modal-backdrop {
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(4px) !important;
+  animation: psFadeIn 0.2s ease !important;
+}
+
+.ps-modal-card {
+  position: relative !important;
+  width: 480px !important;
+  max-width: 94vw !important;
+  max-height: 85vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6) !important;
+  animation: psCardPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.ps-theme-dark .ps-modal-card {
+  background: #070B12 !important;
+  border: 1px solid #243247 !important;
+  color: #E6EDF5 !important;
+}
+.ps-theme-light .ps-modal-card {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.ps-modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 12px 18px !important;
+  border-bottom: 1px solid !important;
+}
+.ps-theme-dark .ps-modal-header {
+  background: #0A111C !important;
+  border-color: #1B2433 !important;
+}
+.ps-theme-light .ps-modal-header {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+.ps-modal-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.ps-modal-body {
+  padding: 16px 18px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+/* Stats Row */
+.ps-stats-bar {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+}
+
+.ps-stat-col {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px 8px !important;
+  border-radius: 10px !important;
+  text-align: center !important;
+}
+.ps-theme-dark .ps-stat-col {
+  background: #0A111C !important;
+  border: 1px solid #1B2433 !important;
+}
+.ps-theme-light .ps-stat-col {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.ps-stat-num {
+  font-family: monospace, monospace !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+}
+.ps-stat-lbl {
+  font-size: 10px !important;
+  color: #93A1B5 !important;
+  margin-top: 2px !important;
+}
+
+/* Threats Container */
+.ps-threats-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  max-height: 240px !important;
+  overflow-y: auto !important;
+}
+
+.ps-threat-item {
+  padding: 10px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+.ps-threat-item.danger {
+  background: rgba(239, 68, 68, 0.08) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+.ps-threat-item.warning {
+  background: rgba(251, 191, 36, 0.08) !important;
+  border-color: rgba(251, 191, 36, 0.35) !important;
+}
+
+.ps-threat-item-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+}
+
+.ps-threat-type-badge {
+  font-size: 9px !important;
+  font-family: monospace, monospace !important;
+  padding: 2px 5px !important;
+  border-radius: 4px !important;
+  background: #0F1A2A !important;
+  border: 1px solid #1E3A4C !important;
+  color: #22D3EE !important;
+}
+
+.ps-threat-name {
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.ps-threat-item.danger .ps-threat-name { color: #EF4444 !important; }
+.ps-threat-item.warning .ps-threat-name { color: #F59E0B !important; }
+
+.ps-threat-score {
+  font-family: monospace, monospace !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+}
+.ps-threat-item.danger .ps-threat-score { color: #EF4444 !important; }
+.ps-threat-item.warning .ps-threat-score { color: #F59E0B !important; }
+
+.ps-threat-snippet {
+  font-size: 11px !important;
+  font-style: italic !important;
+  color: #93A1B5 !important;
+  line-height: 1.35 !important;
+}
+
+.ps-threat-reason {
+  font-size: 11px !important;
+  color: #CBD5E1 !important;
+}
+.ps-theme-light .ps-threat-reason { color: #334155 !important; }
+
+.ps-no-threats-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 16px !important;
+  border-radius: 10px !important;
+  background: rgba(52, 211, 153, 0.08) !important;
+  border: 1px solid rgba(52, 211, 153, 0.25) !important;
+}
+.ps-check-icon { font-size: 24px !important; }
+.ps-no-threats-box strong { font-size: 12.5px !important; color: #10B981 !important; }
+.ps-no-threats-box p { font-size: 11px !important; color: #93A1B5 !important; margin-top: 2px !important; }
+
+/* ================= 3. ON-PAGE THREAT HIGHLIGHTING ================= */
+.ps-threat-highlight-danger {
+  outline: 3px solid #EF4444 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.45) !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+  animation: psThreatPulse 1.8s infinite ease-in-out !important;
+}
+
+.ps-threat-highlight-warning {
+  outline: 2.5px solid #FBBF24 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.35) !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ps-threat-pill {
+  display: inline-block !important;
+  margin-bottom: 4px !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  font-family: monospace, monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  animation: psFadeIn 0.2s ease !important;
+  width: fit-content !important;
+}
+.ps-threat-pill-danger {
+  background: #7F1D1D !important;
+  border: 1px solid #EF4444 !important;
+  color: #FFFFFF !important;
+}
+.ps-threat-pill-warning {
+  background: #78350F !important;
+  border: 1px solid #FBBF24 !important;
+  color: #FEF3C7 !important;
+}
+
+/* ================= 4. FLOATING SELECTION BUTTON ================= */
 #ps-floating-btn {
   position: absolute !important;
   z-index: 2147483645 !important;
@@ -68,7 +371,7 @@
   height: 14px !important;
 }
 
-/* ================= INSPECTOR CARD ================= */
+/* ================= 5. INSPECTOR CARD ================= */
 #ps-inspector-card {
   position: absolute !important;
   z-index: 2147483646 !important;
@@ -80,21 +383,17 @@
   animation: psCardPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Dark Theme Inspector Card */
 #ps-inspector-card.ps-theme-dark {
   background-color: #070B12 !important;
   border: 1px solid #243247 !important;
   color: #E6EDF5 !important;
 }
-
-/* Light Theme Inspector Card */
 #ps-inspector-card.ps-theme-light {
   background-color: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
   color: #0F172A !important;
 }
 
-/* Card Header */
 .ps-card-header {
   display: flex !important;
   align-items: center !important;
@@ -162,35 +461,11 @@
 .ps-theme-light .ps-close-btn { color: #64748B !important; }
 .ps-theme-light .ps-close-btn:hover { color: #0F172A !important; background: #E2E8F0 !important; }
 
-/* Card Body */
 .ps-card-body {
   padding: 14px !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 12px !important;
-}
-
-/* Loading State */
-.ps-loading-state {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 28px 16px !important;
-  text-align: center !important;
-  gap: 12px !important;
-}
-.ps-spinner {
-  width: 24px !important;
-  height: 24px !important;
-  border: 2px solid rgba(34, 211, 238, 0.2) !important;
-  border-top-color: #22D3EE !important;
-  border-radius: 50% !important;
-  animation: psSpin 0.7s linear infinite !important;
-}
-.ps-loading-text {
-  font-size: 12px !important;
-  color: #93A1B5 !important;
 }
 
 /* Verdict Box */
@@ -253,7 +528,6 @@
 .ps-theme-dark .ps-summary-text { color: #CBD5E1 !important; }
 .ps-theme-light .ps-summary-text { color: #334155 !important; }
 
-/* Sections */
 .ps-section {
   display: flex !important;
   flex-direction: column !important;
@@ -322,7 +596,7 @@
 }
 .ps-btn-secondary, .ps-btn-primary {
   flex: 1 !important;
-  padding: 7px 10px !important;
+  padding: 8px 12px !important;
   border-radius: 6px !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -356,7 +630,7 @@
 }
 .ps-theme-light .ps-btn-primary:hover { background: #BAE6FD !important; }
 
-/* ================= URL THREAT BANNER ================= */
+/* ================= 6. URL THREAT BANNER ================= */
 #ps-url-banner {
   position: sticky !important;
   top: 0 !important;
@@ -365,14 +639,12 @@
   z-index: 2147483647 !important;
   animation: psBannerSlide 0.25s ease-out !important;
 }
-
 .ps-banner-danger {
   background: #7F1D1D !important;
   border-bottom: 2px solid #EF4444 !important;
   color: #FFFFFF !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
 }
-
 .ps-banner-inner {
   max-width: 1200px !important;
   margin: 0 auto !important;
@@ -382,7 +654,6 @@
   justify-content: space-between !important;
   gap: 12px !important;
 }
-
 .ps-banner-left {
   display: flex !important;
   align-items: center !important;
@@ -400,14 +671,8 @@
   border-radius: 4px !important;
   letter-spacing: 0.5px !important;
 }
-.ps-banner-msg {
-  font-size: 12px !important;
-  color: #FEE2E2 !important;
-}
-.ps-banner-msg strong {
-  color: #FFFFFF !important;
-}
-
+.ps-banner-msg { font-size: 12px !important; color: #FEE2E2 !important; }
+.ps-banner-msg strong { color: #FFFFFF !important; }
 .ps-banner-right {
   display: flex !important;
   align-items: center !important;
@@ -426,7 +691,6 @@
   transition: all 0.15s ease !important;
 }
 .ps-banner-btn:hover { background: #DC2626 !important; }
-
 .ps-banner-dismiss {
   background: transparent !important;
   border: none !important;
@@ -450,18 +714,27 @@
 }
 
 /* Animations */
+@keyframes psFabEnter {
+  from { opacity: 0; transform: scale(0.8) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes psPulseGlow {
+  from { box-shadow: 0 0 10px rgba(34, 211, 238, 0.4); }
+  to { box-shadow: 0 0 24px rgba(34, 211, 238, 0.8); }
+}
+@keyframes psThreatPulse {
+  0%, 100% { outline-color: #EF4444; box-shadow: 0 0 14px rgba(239, 68, 68, 0.4); }
+  50% { outline-color: #DC2626; box-shadow: 0 0 24px rgba(239, 68, 68, 0.8); }
+}
 @keyframes psFadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes psCardPop {
-  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 @keyframes psBannerSlide {
   from { transform: translateY(-100%); }
   to { transform: translateY(0); }
-}
-@keyframes psSpin {
-  to { transform: rotate(360deg); }
 }

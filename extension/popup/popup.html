@@ -48,7 +48,7 @@
 
     <!-- Nav Tabs -->
     <nav class="ps-tabs">
-      <button type="button" class="ps-tab-btn active" data-tab="tab-active-url">Page URL</button>
+      <button type="button" class="ps-tab-btn active" data-tab="tab-active-url">Page Scan</button>
       <button type="button" class="ps-tab-btn" data-tab="tab-message">Msg Scan</button>
       <button type="button" class="ps-tab-btn" data-tab="tab-apps">Integrations</button>
       <button type="button" class="ps-tab-btn" data-tab="tab-settings">Settings</button>
@@ -56,6 +56,37 @@
 
     <!-- Tab 1: Current Page / Screen URL Scan -->
     <section id="tab-active-url" class="ps-tab-content active">
+      <!-- HERO SCAN BUTTON: User Clicks Button to Scan Page -->
+      <div class="ps-hero-scan-card">
+        <button type="button" class="ps-btn ps-btn-hero" id="btn-scan-page-now">
+          <svg class="ps-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <span>Scan Current Page Now</span>
+        </button>
+        <div class="ps-hero-hint">Analyzes visible WhatsApp messages, Gmail emails, Telegram chats & links</div>
+      </div>
+
+      <!-- Live Page Scan Results Card (Shown after clicking Scan Page button) -->
+      <div id="page-scan-live-card" class="ps-card hidden">
+        <div class="ps-flex-between">
+          <div class="ps-card-title">PAGE SCAN BREAKDOWN</div>
+          <span class="ps-score-badge" id="page-scan-score-badge">0/100</span>
+        </div>
+
+        <div class="ps-flex-between">
+          <div class="ps-verdict-pill" id="page-scan-verdict-pill">ALL CLEAR</div>
+          <span class="ps-scan-counts" id="page-scan-counts-text">0 msgs • 0 links</span>
+        </div>
+
+        <div class="ps-summary-text" id="page-scan-summary-text">No active threats detected.</div>
+
+        <!-- Detected Threats on Screen List -->
+        <div id="page-scan-threats-container" class="ps-threats-mini-list"></div>
+      </div>
+
+      <!-- Current URL Inspection Box -->
       <div class="ps-card">
         <div class="ps-card-title">OPENED URL ANALYSIS</div>
         <div class="ps-url-box" id="active-tab-url">Checking active tab...</div>
@@ -71,12 +102,10 @@
           </div>
         </div>
 
-        <div class="ps-flags-container" id="url-flags-container">
-          <!-- Dynamic tags e.g. Brand Lookalike, Suspicious TLD -->
-        </div>
+        <div class="ps-flags-container" id="url-flags-container"></div>
 
         <div class="ps-btn-group">
-          <button type="button" class="ps-btn ps-btn-primary" id="btn-rescan-url">🔄 Deep Scan Active URL</button>
+          <button type="button" class="ps-btn ps-btn-secondary" id="btn-rescan-url">🔄 Re-check URL Only</button>
         </div>
       </div>
 
@@ -141,7 +170,7 @@
             <span class="ps-app-icon">💬</span>
             <div class="ps-app-details">
               <strong>WhatsApp Web</strong>
-              <span>Real-time selection HUD & chat scan</span>
+              <span>On-demand scan button & selection HUD</span>
             </div>
             <span class="ps-status-active">Active</span>
           </div>
@@ -150,7 +179,7 @@
             <span class="ps-app-icon">✉️</span>
             <div class="ps-app-details">
               <strong>Gmail</strong>
-              <span>Email body selection & spoofing alert</span>
+              <span>Email body & link threat crawler</span>
             </div>
             <span class="ps-status-active">Active</span>
           </div>
@@ -159,7 +188,7 @@
             <span class="ps-app-icon">✈️</span>
             <div class="ps-app-details">
               <strong>Telegram Web</strong>
-              <span>Channel & DM selection analyzer</span>
+              <span>Chat messages & channel analyzer</span>
             </div>
             <span class="ps-status-active">Active</span>
           </div>
@@ -176,8 +205,8 @@
           <div class="ps-app-item">
             <span class="ps-app-icon">🛡️</span>
             <div class="ps-app-details">
-              <strong>Screen URLs</strong>
-              <span>Live tab navigation inspection</span>
+              <strong>Screen URLs & Links</strong>
+              <span>Instant screen crawler</span>
             </div>
             <span class="ps-status-active">Active</span>
           </div>
@@ -189,6 +218,11 @@
     <section id="tab-settings" class="ps-tab-content">
       <div class="ps-card">
         <div class="ps-card-title">SCANNER PREFERENCES</div>
+
+        <label class="ps-toggle-row">
+          <span>Floating "Scan Page" Button on Screen</span>
+          <input type="checkbox" id="setting-fab-scan">
+        </label>
 
         <label class="ps-toggle-row">
           <span>Floating Selection Scan Button</span>
@@ -220,7 +254,7 @@
 
     <!-- Footer -->
     <footer class="ps-footer">
-      <span>PhishShield India • Hackathon PS 02</span>
+      <span>PhishShield India • PS 02</span>
       <span>1930 Helpline</span>
     </footer>
   </div>

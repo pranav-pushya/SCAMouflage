@@ -15,6 +15,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const tabBtns = document.querySelectorAll('.ps-tab-btn');
   const tabContents = document.querySelectorAll('.ps-tab-content');
 
+  // Hero Page Scan elements
+  const btnScanPageNow = document.getElementById('btn-scan-page-now');
+  const pageScanLiveCard = document.getElementById('page-scan-live-card');
+  const pageScanScoreBadge = document.getElementById('page-scan-score-badge');
+  const pageScanVerdictPill = document.getElementById('page-scan-verdict-pill');
+  const pageScanCountsText = document.getElementById('page-scan-counts-text');
+  const pageScanSummaryText = document.getElementById('page-scan-summary-text');
+  const pageScanThreatsContainer = document.getElementById('page-scan-threats-container');
+
   // URL Tab elements
   const activeTabUrlEl = document.getElementById('active-tab-url');
   const urlScoreVal = document.getElementById('url-score-val');
@@ -37,6 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sampleTags = document.querySelectorAll('.ps-sample-tag');
 
   // Settings elements
+  const settingFabScan = document.getElementById('setting-fab-scan');
   const settingFloatingHud = document.getElementById('setting-floating-hud');
   const settingAutoScan = document.getElementById('setting-auto-scan');
   const settingUrlBanner = document.getElementById('setting-url-banner');
@@ -48,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 1. Load Settings and Theme
   chrome.storage.local.get({
+    floatingPageScanFabEnabled: true,
     floatingHudEnabled: true,
     autoScanSelection: false,
     urlWarningBannerEnabled: true,
@@ -55,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     theme: 'dark'
   }, (stored) => {
     applyTheme(stored.theme);
+    if (settingFabScan) settingFabScan.checked = stored.floatingPageScanFabEnabled;
     settingFloatingHud.checked = stored.floatingHudEnabled;
     settingAutoScan.checked = stored.autoScanSelection;
     settingUrlBanner.checked = stored.urlWarningBannerEnabled;
@@ -105,7 +117,96 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // 5. Active Tab URL Inspection
+  // 5. On-Demand Page Scan (When user clicks button!)
+  if (btnScanPageNow) {
+    btnScanPageNow.addEventListener('click', async () => {
+      const originalHtml = btnScanPageNow.innerHTML;
+      btnScanPageNow.innerHTML = `
+        <span class="ps-pulse-indicator" style="background:#22D3EE;"></span>
+        <span>Scanning messages & links on screen...</span>
+      `;
+      btnScanPageNow.disabled = true;
+
+      try {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tabs || tabs.length === 0) {
+          btnScanPageNow.innerHTML = originalHtml;
+          btnScanPageNow.disabled = false;
+          return;
+        }
+
+        activeTab = tabs[0];
+
+        // Send scan command to tab content script
+        chrome.tabs.sendMessage(activeTab.id, { action: 'TRIGGER_FULL_PAGE_SCAN' }, (report) => {
+          btnScanPageNow.innerHTML = originalHtml;
+          btnScanPageNow.disabled = false;
+
+          if (!report) {
+            // If content script was not ready or internal chrome page
+            pageScanLiveCard.classList.remove('hidden');
+            pageScanVerdictPill.textContent = 'RESTRICTED / SETTINGS PAGE';
+            pageScanVerdictPill.className = 'ps-verdict-pill safe';
+            pageScanScoreBadge.textContent = '0/100';
+            pageScanCountsText.textContent = 'Protected Browser Tab';
+            pageScanSummaryText.textContent = 'Internal browser tab. No external phishing vectors can run here.';
+            return;
+          }
+
+          renderPageScanResultsInPopup(report);
+        });
+      } catch (err) {
+        btnScanPageNow.innerHTML = originalHtml;
+        btnScanPageNow.disabled = false;
+      }
+    });
+  }
+
+  function renderPageScanResultsInPopup(report) {
+    pageScanLiveCard.classList.remove('hidden');
+    pageScanScoreBadge.textContent = `${report.maxScore}/100`;
+    pageScanCountsText.textContent = `${report.messagesCount} msgs • ${report.linksCount} links`;
+
+    const isDanger = report.overallVerdict === 'danger';
+    const isWarn = report.overallVerdict === 'warning';
+
+    if (isDanger) {
+      pageScanVerdictPill.textContent = 'SCAM / PHISHING DETECTED';
+      pageScanVerdictPill.className = 'ps-verdict-pill danger';
+      pageScanScoreBadge.style.color = 'var(--danger-red)';
+      pageScanSummaryText.textContent = `Found ${report.threatsCount} suspicious/fraudulent element(s) on ${report.hostApp}. Do not click or send OTP.`;
+    } else if (isWarn) {
+      pageScanVerdictPill.textContent = 'SUSPICIOUS ELEMENTS FOUND';
+      pageScanVerdictPill.className = 'ps-verdict-pill warn';
+      pageScanScoreBadge.style.color = 'var(--warning-amber)';
+      pageScanSummaryText.textContent = `Caution: ${report.threatsCount} item(s) on this screen triggered scam heuristics.`;
+    } else {
+      pageScanVerdictPill.textContent = 'ALL CLEAR • SCREEN SAFE';
+      pageScanVerdictPill.className = 'ps-verdict-pill safe';
+      pageScanScoreBadge.style.color = 'var(--success-emerald)';
+      pageScanSummaryText.textContent = `Clean screen: Scanned ${report.messagesCount} messages and ${report.linksCount} links. No scam patterns detected.`;
+    }
+
+    // Populate threats list
+    pageScanThreatsContainer.innerHTML = '';
+    if (report.threats && report.threats.length > 0) {
+      report.threats.forEach(t => {
+        const item = document.createElement('div');
+        const isD = t.score >= 65;
+        item.className = `ps-threat-mini-item ${isD ? 'danger' : 'warning'}`;
+        item.innerHTML = `
+          <div class="ps-threat-mini-header">
+            <span class="ps-threat-mini-title">${escapeHtml(t.sourceType || 'Threat')} • ${escapeHtml(t.title || 'Scam')}</span>
+            <span>${t.score}/100</span>
+          </div>
+          <div class="ps-threat-mini-snippet">"${escapeHtml(t.snippet)}"</div>
+        `;
+        pageScanThreatsContainer.appendChild(item);
+      });
+    }
+  }
+
+  // 6. Active Tab URL Inspection
   async function scanActiveTab() {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -176,7 +277,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   scanActiveTab();
   btnRescanUrl.addEventListener('click', scanActiveTab);
 
-  // 6. Message Scanner
+  // 7. Message Scanner
   function executeMessageScan(text) {
     if (!text || !text.trim()) return;
 
@@ -243,7 +344,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     executeMessageScan(msgInput.value);
   });
 
-  // Sample Tags Click
   sampleTags.forEach(tag => {
     tag.addEventListener('click', () => {
       msgInput.value = tag.dataset.sample;
@@ -277,9 +377,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // 7. Save Settings
+  // 8. Save Settings
   btnSaveSettings.addEventListener('click', () => {
     const updated = {
+      floatingPageScanFabEnabled: settingFabScan ? settingFabScan.checked : true,
       floatingHudEnabled: settingFloatingHud.checked,
       autoScanSelection: settingAutoScan.checked,
       urlWarningBannerEnabled: settingUrlBanner.checked,
@@ -295,4 +396,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   btnOpenDashboard.addEventListener('click', () => {
     chrome.tabs.create({ url: 'http://localhost:5173' });
   });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
 });

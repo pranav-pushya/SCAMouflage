@@ -7,6 +7,7 @@
 importScripts('../rules/detector-engine.js');
 
 const DEFAULT_SETTINGS = {
+  floatingPageScanFabEnabled: true,
   floatingHudEnabled: true,
   autoScanSelection: false,
   urlWarningBannerEnabled: true,
@@ -58,7 +59,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     });
   } else if (info.menuItemId === 'ps_scan_page' && tab.url) {
     chrome.tabs.sendMessage(tab.id, {
-      action: 'TRIGGER_PAGE_SCAN',
+      action: 'TRIGGER_FULL_PAGE_SCAN',
       url: tab.url
     });
   }
