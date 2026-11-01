@@ -230,7 +230,19 @@
   const SUSPICIOUS_TLDS = new Set([
     "xyz", "top", "click", "live", "icu", "buzz", "shop", "vip",
     "work", "site", "online", "club", "pw", "cc", "fit", "rest",
-    "surf", "gq", "ml", "cf", "tk", "ga", "link"
+    "surf", "gq", "ml", "cf", "tk", "ga", "link", "cam", "sbs",
+    "monster", "cfd", "beauty", "hair", "skin", "quest", "autos",
+    "homes", "boats", "country", "stream", "date", "racing", "party",
+    "trade", "science", "download", "accountant", "loan", "faith",
+    "cricket", "win"
+  ]);
+
+  const FREE_HOSTING_DOMAINS = new Set([
+    "web.app", "firebaseapp.com", "pages.dev", "workers.dev",
+    "github.io", "vercel.app", "netlify.app", "glitch.me",
+    "herokuapp.com", "000webhostapp.com", "weebly.com", "wixsite.com",
+    "blogspot.com", "sites.google.com", "forms.gle", "forms.office.com",
+    "ngrok.io", "loca.lt", "serveo.net", "duckdns.org"
   ]);
 
   const INDIAN_BRANDS = [
@@ -246,7 +258,18 @@
     { name: "FASTag / NHAI", official: ["ihmcl.co.in", "nhai.gov.in"], keys: ["fastag", "ihmcl", "toll"] },
     { name: "Paytm", official: ["paytm.com"], keys: ["paytm"] },
     { name: "PhonePe", official: ["phonepe.com"], keys: ["phonepe"] },
-    { name: "Google Pay", official: ["pay.google.com"], keys: ["gpay", "googlepay"] }
+    { name: "Google Pay", official: ["pay.google.com"], keys: ["gpay", "googlepay"] },
+    { name: "PayPal", official: ["paypal.com", "paypal.me"], keys: ["paypal"] },
+    { name: "Netflix", official: ["netflix.com"], keys: ["netflix"] },
+    { name: "Microsoft", official: ["microsoft.com", "office.com", "live.com", "office365.com", "outlook.com"], keys: ["microsoft", "office365", "outlook", "onedrive"] },
+    { name: "Apple", official: ["apple.com", "icloud.com"], keys: ["appleid", "icloud"] },
+    { name: "Amazon", official: ["amazon.com", "amazon.in"], keys: ["amazon"] },
+    { name: "Google", official: ["google.com", "gmail.com"], keys: ["google", "gmail"] },
+    { name: "FedEx", official: ["fedex.com"], keys: ["fedex"] },
+    { name: "DHL", official: ["dhl.com", "dhl.de"], keys: ["dhl"] },
+    { name: "WhatsApp", official: ["whatsapp.com"], keys: ["whatsapp"] },
+    { name: "Telegram", official: ["telegram.org", "t.me"], keys: ["telegram"] },
+    { name: "Flipkart", official: ["flipkart.com"], keys: ["flipkart"] }
   ];
 
   /** Extract all HTTP/HTTPS links from text */
@@ -499,20 +522,66 @@
       }
     }
 
-    // Check phishing keywords in URL
-    const PHISHING_KW = ["kyc", "unblock", "verify", "pan-link", "fastag-recharge", "apk", "bijli", "lottery", "login", "signin", "ebill"];
-    const foundKeywords = PHISHING_KW.filter(kw => host.includes(kw) || fullPath.includes(kw));
-    if (foundKeywords.length > 0 && !isOfficialDomain) {
+    // Check phishing keywords & Combosquatting in URL
+    const PHISHING_KW = [
+      "kyc", "update", "verify", "verification", "login", "signin",
+      "secure", "security", "refund", "reward", "rewards", "claim", "bonus",
+      "otp", "support", "account", "help", "customer", "care",
+      "service", "banking", "portal", "alert", "auth", "validation",
+      "bill", "payment", "recharge", "blocked", "unblock",
+      "invoice", "overdue", "receipt", "ebill", "bijli", "tax-refund",
+      "payout", "parcel", "shipment", "courier", "tracking", "customs",
+      "clearance", "package", "delivery", "lottery", "kbc", "winner",
+      "jackpot", "giftcard", "crypto", "wallet", "suspended", "deactivated",
+      "password", "passcode", "credential"
+    ];
+
+    const hostTokens = host.split(/[.\-_0-9]/).filter(Boolean);
+    const matchedHostKws = PHISHING_KW.filter(kw => hostTokens.includes(kw) || (kw.length >= 4 && host.includes(kw)));
+    
+    if (matchedHostKws.length >= 2 && !isOfficialDomain) {
+      flags.push("PHISHING_KEYWORD_STUFFING");
+      score += 35;
+      reasons.push(`Domain packs multiple phishing/scam keywords together (${matchedHostKws.slice(0, 3).join(", ")}).`);
+    } else if (matchedHostKws.length === 1 && !isOfficialDomain && !spoofedBrand) {
       flags.push("PHISHING_KEYWORDS");
-      score += 20;
-      reasons.push(`Contains credential-harvesting keywords: [${foundKeywords.join(", ")}].`);
+      score += 15;
+      reasons.push(`Contains credential-harvesting keyword: [${matchedHostKws[0]}].`);
     }
 
-    // Check for direct APK download
-    if (fullPath.endsWith(".apk") || fullPath.includes(".apk?")) {
-      flags.push("MALICIOUS_APK_LINK");
+    // Check sensitive path keywords
+    const SENSITIVE_PATHS = ["login", "signin", "sign-in", "log-in", "verify", "verification", "auth", "account", "update", "billing", "pay", "payment", "invoice", "claim", "reward", "webscr", "download"];
+    const pathTokens = fullPath.split(/[/.\-_?&=]/).filter(Boolean);
+    const hasSensitivePath = SENSITIVE_PATHS.some(sp => pathTokens.includes(sp));
+    if (hasSensitivePath && !isOfficialDomain) {
+      flags.push("SENSITIVE_PATH");
+      score += 15;
+      reasons.push("URL path targets sensitive login, billing, or verification actions.");
+    }
+
+    // Check credential harvesting parameters in query string
+    if (/[?&](?:email|user|recipient|target|to)=[^&#]+@[^&#]+/i.test(target) || /[?&](?:login|auth|session|token|cmd)=/i.test(target)) {
+      flags.push("CREDENTIAL_HARVESTING_PARAMS");
+      score += 25;
+      reasons.push("URL carries victim email or credential harvesting parameters in query.");
+    }
+
+    // Check free hosting / dynamic DNS abuse
+    const isFreeHosting = [...FREE_HOSTING_DOMAINS].some(fh => host === fh || host.endsWith('.' + fh));
+    if (isFreeHosting && !isOfficialDomain) {
+      if (matchedHostKws.length > 0 || spoofedBrand || hasSensitivePath) {
+        flags.push("FREE_HOSTING_PHISH");
+        score += 35;
+        reasons.push("Phishing portal hosted on free subdomain / cloud app platform.");
+      }
+    }
+
+    // Check for direct APK / payload download
+    const DANGEROUS_EXTS = [".apk", ".exe", ".scr", ".bat", ".vbs", ".iso", ".zip", ".msi"];
+    if (DANGEROUS_EXTS.some(ext => fullPath.includes(ext))) {
+      flags.push("MALICIOUS_FILE_DOWNLOAD");
       score += 45;
-      reasons.push("Direct APK download link detected. High risk of spyware or financial trojan.");
+      reasons.push("Direct executable/archive download link detected (Malware / Spyware risk).");
     }
 
     // Cap official domains
