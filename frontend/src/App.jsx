@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import TopNav from './components/TopNav';
+import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import EmailPage from './pages/EmailPage';
 import SmsPage from './pages/SmsPage';
@@ -27,10 +28,8 @@ export default function App() {
             </Routes>
           </main>
 
-          {/* Minimal Footer */}
-          <footer className="w-full border-t border-[#0E1622] py-6 text-center text-xs text-[#93A1B5] font-mono transition-colors duration-200">
-            PhishShield India · Hackathon PS 02 · Prototype
-          </footer>
+          {/* Comprehensive Footer */}
+          <Footer />
         </div>
       </HashRouter>
     </ThemeProvider>
