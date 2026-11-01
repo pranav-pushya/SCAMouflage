@@ -25,12 +25,15 @@ from rapidfuzz import fuzz
 
 from .url_config import (
     BRAND_SIMILARITY_THRESHOLD,
+    DANGEROUS_FILE_EXTENSIONS,
+    FREE_HOSTING_DOMAINS,
     MAX_REDIRECT_HOPS,
     NETWORK_BUDGET_SECONDS,
     OFFICIAL_DOMAIN_MAX_SCORE,
     PHISHING_KEYWORDS,
     REQUEST_TIMEOUT_SECONDS,
     RULE_WEIGHTS,
+    SENSITIVE_PATH_KEYWORDS,
     SHORTENER_DOMAINS,
     SUSPICIOUS_TLDS,
     W_ML,
@@ -659,6 +662,67 @@ def _evaluate_rules_and_brands(
                 score += RULE_WEIGHTS["BRAND_IN_DOMAIN"]
             break
 
+    # 11. Phishing keywords & combosquatting in hostname
+    matched_phish_kws = set()
+    for pk in PHISHING_KEYWORDS:
+        if len(pk) < 4:
+            if pk in host_tokens:
+                matched_phish_kws.add(pk)
+        else:
+            if pk in host_tokens or pk in domain_part or any(pk in lbl for lbl in domain_labels if lbl != suffix):
+                matched_phish_kws.add(pk)
+
+    if len(matched_phish_kws) >= 2:
+        flags.append({
+            "code": "PHISHING_KEYWORD_STUFFING",
+            "reason": "Domain me ek sath kai phishing/scam keywords shamil hain (Combosquatting)",
+        })
+        score += RULE_WEIGHTS["PHISHING_KEYWORD_STUFFING"]
+    elif len(matched_phish_kws) == 1 and not any(f["code"] in ("BRAND_LOOKALIKE", "BRAND_IN_DOMAIN") for f in flags):
+        flags.append({
+            "code": "PHISHING_KEYWORDS",
+            "reason": "Domain me sandigdh phishing ya verification keyword maujood hai",
+        })
+        score += RULE_WEIGHTS["PHISHING_KEYWORDS"]
+
+    # 12. Sensitive Path Action Detection
+    path_lower = (parsed.path or "").lower()
+    path_tokens = set(t for t in re.split(r"[/\-_.]", path_lower) if t)
+    if any(sp in path_tokens for sp in SENSITIVE_PATH_KEYWORDS):
+        flags.append({
+            "code": "SENSITIVE_PATH",
+            "reason": "URL path me sensitive login ya verification action maujood hai",
+        })
+        score += RULE_WEIGHTS["SENSITIVE_PATH"]
+
+    # 13. Credential Harvesting Parameters in Query String
+    query_lower = (parsed.query or "").lower()
+    if re.search(r"\b(?:email|user|recipient|target|victim|to)=[^&]+@[^&]+", query_lower) or re.search(r"\b(?:login|auth|session|token|cmd)=[^&]+", query_lower):
+        flags.append({
+            "code": "CREDENTIAL_HARVESTING_PARAMS",
+            "reason": "URL me victim email ya credential harvesting parameter shamil hai",
+        })
+        score += RULE_WEIGHTS["CREDENTIAL_HARVESTING_PARAMS"]
+
+    # 14. Free Hosting / Dynamic Subdomain Abuse
+    if registered_domain in FREE_HOSTING_DOMAINS:
+        sub = (ext.subdomain or "").lower()
+        sub_tokens = set(t for t in re.split(r"[.\-_0-9]", sub) if t)
+        if any(pk in sub_tokens for pk in PHISHING_KEYWORDS) or matched_brand_name or any(sp in path_tokens for sp in SENSITIVE_PATH_KEYWORDS):
+            flags.append({
+                "code": "FREE_HOSTING_PHISH",
+                "reason": "Free hosting ya dynamic platform par fake portal banaya gaya hai",
+            })
+            score += RULE_WEIGHTS["FREE_HOSTING_PHISH"]
+
+    # 15. Dangerous File / Payload Download Extension
+    if any(path_lower.endswith(df) or f"{df}?" in normalized_url.lower() for df in DANGEROUS_FILE_EXTENSIONS):
+        flags.append({
+            "code": "SUSPICIOUS_FILE_DOWNLOAD",
+            "reason": "Direct software ya script download link hai (Malware risk)",
+        })
+        score += RULE_WEIGHTS["SUSPICIOUS_FILE_DOWNLOAD"]
+
     return score, flags, False, registered_domain, matched_brand_name
 
 
@@ -910,7 +974,12 @@ def analyze_url(url: str) -> Dict[str, Any]:
                 ml_probability = round(prob, 4)
                 ml_score = int(round(prob * 100))
 
-                final_score = int(round(W_RULE * rule_score + W_ML * ml_score))
+                blended = int(round(W_RULE * rule_score + W_ML * ml_score))
+                if rule_score >= 35:
+                    final_score = max(rule_score, blended)
+                else:
+                    final_score = blended
+
                 if prob >= 0.8:
                     flags.append({
                         "code": "ML_HIGH_RISK",

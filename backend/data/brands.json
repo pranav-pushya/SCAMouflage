@@ -483,5 +483,102 @@
       "neupass",
       "neucoins"
     ]
+  },
+  {
+    "name": "PayPal",
+    "official_domains": [
+      "paypal.com",
+      "paypal.me"
+    ],
+    "keywords": [
+      "paypal"
+    ]
+  },
+  {
+    "name": "Netflix",
+    "official_domains": [
+      "netflix.com"
+    ],
+    "keywords": [
+      "netflix"
+    ]
+  },
+  {
+    "name": "Microsoft",
+    "official_domains": [
+      "microsoft.com",
+      "office.com",
+      "live.com",
+      "office365.com",
+      "outlook.com",
+      "msn.com"
+    ],
+    "keywords": [
+      "microsoft",
+      "office365",
+      "outlook",
+      "onedrive"
+    ]
+  },
+  {
+    "name": "Apple",
+    "official_domains": [
+      "apple.com",
+      "icloud.com"
+    ],
+    "keywords": [
+      "appleid",
+      "icloud"
+    ]
+  },
+  {
+    "name": "Google",
+    "official_domains": [
+      "google.com",
+      "gmail.com",
+      "google.co.in"
+    ],
+    "keywords": [
+      "google",
+      "gmail"
+    ]
+  },
+  {
+    "name": "FedEx",
+    "official_domains": [
+      "fedex.com"
+    ],
+    "keywords": [
+      "fedex"
+    ]
+  },
+  {
+    "name": "DHL",
+    "official_domains": [
+      "dhl.com",
+      "dhl.de"
+    ],
+    "keywords": [
+      "dhl"
+    ]
+  },
+  {
+    "name": "WhatsApp",
+    "official_domains": [
+      "whatsapp.com"
+    ],
+    "keywords": [
+      "whatsapp"
+    ]
+  },
+  {
+    "name": "Telegram",
+    "official_domains": [
+      "telegram.org",
+      "t.me"
+    ],
+    "keywords": [
+      "telegram"
+    ]
   }
 ]
