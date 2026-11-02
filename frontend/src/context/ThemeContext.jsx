@@ -8,7 +8,10 @@ const ThemeContext = createContext({
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    // Check saved preference or default to dark
+    // Check URL query param, saved preference, or default to dark
+    if (typeof window !== 'undefined' && window.location.search.includes('theme=light')) {
+      return 'light';
+    }
     const saved = localStorage.getItem('phishshield_theme');
     if (saved === 'light' || saved === 'dark') {
       return saved;

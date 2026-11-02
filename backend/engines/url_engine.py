@@ -35,6 +35,7 @@ from .url_config import (
     RULE_WEIGHTS,
     SENSITIVE_PATH_KEYWORDS,
     SHORTENER_DOMAINS,
+    STANDARD_TLDS,
     SUSPICIOUS_TLDS,
     W_ML,
     W_RULE,
@@ -434,9 +435,14 @@ def extract_features(url: str) -> Dict[str, Any]:
         digits = sum(c.isdigit() for c in host)
         h_len = max(1, len(host))
 
-        # Check suspicious TLD
+        # Check suspicious or non-standard TLD
         suffix_parts = suffix.split(".")
-        is_susp_tld = 1 if (any(p in SUSPICIOUS_TLDS for p in suffix_parts) or suffix in SUSPICIOUS_TLDS) else 0
+        is_susp = (
+            any(p in SUSPICIOUS_TLDS for p in suffix_parts)
+            or suffix in SUSPICIOUS_TLDS
+            or (bool(suffix) and suffix not in STANDARD_TLDS and not any(p in STANDARD_TLDS for p in suffix_parts))
+        )
+        is_susp_tld = 1 if is_susp else 0
 
         return {
             "host_length": len(host),
@@ -552,15 +558,25 @@ def _evaluate_rules_and_brands(
         })
         score += RULE_WEIGHTS["LONG_URL"]
 
-    # 8. Suspicious TLD
+    # 8. Suspicious / Uncommon TLD Classification
     suffix = ext.suffix.lower()
     suffix_parts = suffix.split(".")
-    if any(p in SUSPICIOUS_TLDS for p in suffix_parts) or suffix in SUSPICIOUS_TLDS:
+    is_susp_tld = any(p in SUSPICIOUS_TLDS for p in suffix_parts) or suffix in SUSPICIOUS_TLDS
+    is_std_tld = any(p in STANDARD_TLDS for p in suffix_parts) or suffix in STANDARD_TLDS
+    is_uncommon_tld = bool(suffix) and not is_std_tld and not is_susp_tld
+
+    if is_susp_tld:
         flags.append({
             "code": "SUSPICIOUS_TLD",
-            "reason": "Ye TLD aksar fraud aur spam ke liye use hota hai",
+            "reason": f"Ye TLD (.{suffix}) aksar fraud aur spam ke liye use hota hai" if len(suffix) <= 8 else "Ye TLD aksar fraud aur spam ke liye use hota hai",
         })
         score += RULE_WEIGHTS["SUSPICIOUS_TLD"]
+    elif is_uncommon_tld:
+        flags.append({
+            "code": "UNCOMMON_OR_PSEUDO_TLD",
+            "reason": f"Ye non-standard ya anjaan domain extension (.{suffix}) hai" if len(suffix) <= 8 else "Ye non-standard ya anjaan domain extension hai",
+        })
+        score += RULE_WEIGHTS["UNCOMMON_OR_PSEUDO_TLD"]
 
     # 9. No HTTPS
     if parsed.scheme.lower() != "https":
@@ -646,9 +662,11 @@ def _evaluate_rules_and_brands(
             # (b) brand in subdomain labels while registered domain is different
             # (c) rapidfuzz typo-match against a whole domain label
             # (d) known domain age < 30 days
+            # (e) brand on disposable, suspicious, or uncommon TLD
             is_young = (domain_age_days is not None and domain_age_days < 30)
+            is_risky_tld = is_susp_tld or is_uncommon_tld
 
-            if has_phish_kw or brand_in_sub or is_typo or is_young:
+            if has_phish_kw or brand_in_sub or is_typo or is_young or is_risky_tld:
                 flags.append({
                     "code": "BRAND_LOOKALIKE",
                     "reason": f"{b_name} jaisa dikhta hai, par ye {b_name} ka asli domain nahi hai",
@@ -977,6 +995,9 @@ def analyze_url(url: str) -> Dict[str, Any]:
                 blended = int(round(W_RULE * rule_score + W_ML * ml_score))
                 if rule_score >= 35:
                     final_score = max(rule_score, blended)
+                elif rule_score <= 25 and not any(f["code"] in ("BRAND_LOOKALIKE", "SUSPICIOUS_TLD", "UNCOMMON_OR_PSEUDO_TLD", "IP_ADDRESS_HOST") for f in flags):
+                    # Keep clean legitimate domains from being falsely inflated by ML
+                    final_score = rule_score
                 else:
                     final_score = blended
 

@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Shield, ShieldAlert, ArrowRight, Sparkles, MessageSquare, Link2, Mail, Globe, Cpu, Zap, CheckCircle2 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import RadarHero from '../components/RadarHero';
+import LiveTelemetry from '../components/LiveTelemetry';
+import QuickTestLauncher from '../components/QuickTestLauncher';
 
 export default function HomePage() {
+  const { isDark } = useTheme();
   const [pasteContent, setPasteContent] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
   const navigate = useNavigate();
 
   const handleAutoAnalyze = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const text = pasteContent.trim();
     if (!text) return;
 
-    // Client-side detection logic per specification:
-    // lines like Authentication-Results/Received/From: => email
-    // a single token starting with http/hxxp or containing a dot and no spaces => url
-    // otherwise => sms
     let targetRoute = '/sms';
 
     if (/^(?:Authentication-Results:|Received:|From:|DKIM-Signature:|Return-Path:)/im.test(text)) {
@@ -27,269 +31,282 @@ export default function HomePage() {
     navigate(targetRoute, { state: { content: text, autoRun: true } });
   };
 
+  const handleSelectSample = (sampleText) => {
+    setPasteContent(sampleText);
+    setTimeout(() => {
+      const inputEl = document.getElementById('home-paste-input');
+      if (inputEl) {
+        inputEl.focus();
+        inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
+  };
+
   return (
-    <div className="space-y-12">
+    <div className="space-y-10 sm:space-y-14">
       {/* Two Columns Hero */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-4">
-        {/* LEFT COLUMN (lg:col-span-7): Heading, Pitch, Quick Buttons, Chips, Auto-detect Box */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Graviton Hackathon Chip */}
-          <div className="inline-block px-3 py-1 rounded-full text-xs font-mono bg-[#0A111C] border border-[#243247] text-[#22D3EE]">
-            GRAVITON 2026 · PS 02
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center">
+        {/* LEFT COLUMN (lg:col-span-7) */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="lg:col-span-7 space-y-6"
+        >
+          {/* Graviton Hackathon Chip with Pulsing Beacon */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-[#2E151B] border border-[#DA7B93]/40 text-[#DA7B93] shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#DA7B93] animate-ping" />
+            <span>GRAVITON 2026 · PROBLEM STATEMENT 02</span>
           </div>
 
-          {/* H1 Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[58px] font-bold tracking-tight text-[#E6EDF5] leading-[1.08]">
-            PhishShield India
+          {/* H1 Heading with Haus Palette Gradient */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight text-[#F8FAFC] leading-[1.08]">
+            Multi-Engine AI Defense Against{' '}
+            <span className={`text-transparent bg-clip-text bg-gradient-to-r ${
+              isDark
+                ? 'from-[#DA7B93] via-[#E899AE] to-[#376E6F]'
+                : 'from-[#B83A5D] via-[#DA7B93] to-[#205455]'
+            }`}>
+              Indian Cyber Frauds
+            </span>
           </h1>
 
           {/* One line description */}
-          <p className="text-sm sm:text-base text-[#93A1B5] leading-relaxed max-w-xl">
-            Scam SMS, link ya email paste karo. Risk score, reasons aur next step milte hain, Hinglish mein.
+          <p className="text-sm sm:text-base text-[#B8C5D6] leading-relaxed max-w-2xl">
+            Real-time inspection for fake KYC, digital arrest summons, FASTag blacklist links, and electricity bill scams. Get explainable risk scores and direct 1930 reporting guidance in clear Hinglish.
           </p>
 
-          {/* Two Action Buttons */}
+          {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-3 pt-1">
-            <Link
-              to="/sms"
-              className="px-5 py-2.5 rounded-[10px] bg-[#22D3EE] text-[#070B12] font-semibold text-xs sm:text-sm hover:bg-[#22D3EE]/90 transition-all cursor-pointer shadow-lg shadow-[#22D3EE]/10 focus:outline-none focus:ring-2 focus:ring-[#22D3EE]"
-            >
-              Check an SMS
-            </Link>
-            <Link
-              to="/url"
-              className="px-5 py-2.5 rounded-[10px] bg-[#0A111C] border border-[#243247] text-[#E6EDF5] font-semibold text-xs sm:text-sm hover:bg-[#0F1A2A] hover:border-[#1E3A4C] hover:text-[#22D3EE] transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#22D3EE]"
-            >
-              Check a link
-            </Link>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/sms"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-[12px] font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-[#DA7B93] ${
+                  isDark
+                    ? 'bg-[#DA7B93] text-[#1C3334] hover:bg-[#E899AE] shadow-[#DA7B93]/20'
+                    : 'bg-[#B83A5D] text-white hover:bg-[#9E2B4B] shadow-rose-200'
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Check an SMS</span>
+              </Link>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/url"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-[12px] border font-semibold text-xs sm:text-sm transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#DA7B93] shadow-sm ${
+                  isDark
+                    ? 'bg-[#1C3334]/80 border-[#376E6F]/60 text-[#F8FAFC] hover:bg-[#2F4454] hover:border-[#DA7B93] hover:text-[#DA7B93]'
+                    : 'bg-white border-slate-300 text-slate-700 hover:border-[#B83A5D] hover:text-[#B83A5D] hover:bg-slate-50'
+                }`}
+              >
+                <Link2 className={`w-4 h-4 ${isDark ? 'text-[#DA7B93]' : 'text-[#B83A5D]'}`} />
+                <span>Check a link</span>
+              </Link>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/email"
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-[12px] border font-semibold text-xs sm:text-sm transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#DA7B93] shadow-sm ${
+                  isDark
+                    ? 'bg-[#1C3334]/80 border-[#376E6F]/40 text-[#B8C5D6] hover:bg-[#2F4454] hover:text-[#F8FAFC]'
+                    : 'bg-white border-slate-300 text-slate-700 hover:border-[#B83A5D] hover:text-[#B83A5D] hover:bg-slate-50'
+                }`}
+              >
+                <Mail className={`w-4 h-4 ${isDark ? 'text-[#376E6F]' : 'text-[#205455]'}`} />
+                <span>Email Headers</span>
+              </Link>
+            </motion.div>
           </div>
 
-          {/* Four Plain Feature Chips */}
-          <div className="flex flex-wrap gap-2 pt-1 text-xs text-[#93A1B5] font-mono">
-            <span className="px-3 py-1 rounded-md bg-[#0A111C] border border-[#1B2433]">
-              India scam pack
-            </span>
-            <span className="px-3 py-1 rounded-md bg-[#0A111C] border border-[#1B2433]">
-              Link journey
-            </span>
-            <span className="px-3 py-1 rounded-md bg-[#0A111C] border border-[#1B2433]">
-              Header forensics
-            </span>
-            <span className="px-3 py-1 rounded-md bg-[#0A111C] border border-[#1B2433]">
-              Hinglish explanations
-            </span>
-          </div>
-
-          {/* Compact Auto-detect Paste Box */}
+          {/* Compact Auto-detect Paste Box with Haus Cyber Styling */}
           <form onSubmit={handleAutoAnalyze} className="pt-2">
-            <div className="bg-white/[0.04] border border-white/10 rounded-[16px] p-3.5 backdrop-blur-md space-y-3">
-              <label htmlFor="home-paste-input" className="block text-xs font-mono text-[#93A1B5]">
-                Quick Auto-Detect:
-              </label>
+            <div
+              className={`relative bg-[#1C3334]/80 border rounded-[16px] p-4 backdrop-blur-md space-y-3 transition-all duration-300 shadow-xl ${
+                isFocused
+                  ? 'border-[#DA7B93] shadow-[0_0_25px_rgba(218,123,147,0.25)]'
+                  : 'border-[#376E6F]/40 hover:border-[#DA7B93]/50'
+              }`}
+            >
+              {/* Decorative cyber corner accents in Rose */}
+              <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-[#DA7B93]/70 rounded-tl" />
+              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b-2 border-r-2 border-[#DA7B93]/70 rounded-br" />
+
+              <div className="flex items-center justify-between">
+                <label htmlFor="home-paste-input" className="block text-xs font-mono text-[#B8C5D6] flex items-center gap-1.5">
+                  <Cpu className="w-3.5 h-3.5 text-[#DA7B93]" />
+                  <span>UNIVERSAL AUTO-DETECT SCANNER:</span>
+                </label>
+                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-semibold ${
+                  isDark
+                    ? 'text-[#376E6F] bg-[#1C3334] border-[#376E6F]/60'
+                    : 'text-[#15803D] bg-[#F0FDF4] border-[#BBF7D0]'
+                }`}>
+                  Tri-Engine Ready
+                </span>
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   id="home-paste-input"
                   type="text"
                   value={pasteContent}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
                   onChange={(e) => setPasteContent(e.target.value)}
-                  placeholder="Paste suspicious SMS, link, or email headers..."
-                  className="flex-1 bg-[#0A111C] border border-[#243247] rounded-[10px] px-3 py-2 text-xs font-mono text-[#E6EDF5] placeholder-[#93A1B5]/40 focus:outline-none focus:ring-1 focus:ring-[#22D3EE]"
+                  placeholder="Paste suspicious SMS, link (hxxp://...), or RFC email headers..."
+                  className="flex-1 bg-[#0F1D1E] border border-[#376E6F]/40 rounded-[10px] px-3.5 py-2.5 text-xs sm:text-sm font-mono text-[#F8FAFC] placeholder-[#B8C5D6]/40 focus:outline-none focus:ring-1 focus:ring-[#DA7B93] focus:border-[#DA7B93] transition-all"
                 />
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={!pasteContent.trim()}
-                  className="min-h-[40px] px-4 py-2 bg-[#0F1A2A] hover:bg-[#1E3A4C] border border-[#22D3EE]/50 text-[#22D3EE] font-medium text-xs rounded-[10px] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#22D3EE] shrink-0"
+                  className={`min-h-[42px] px-5 py-2.5 font-semibold text-xs sm:text-sm rounded-[10px] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shrink-0 flex items-center justify-center gap-2 shadow-md ${
+                    isDark
+                      ? 'bg-gradient-to-r from-[#2E151B] to-[#376E6F] hover:from-[#DA7B93] hover:to-[#376E6F] border border-[#DA7B93]/60 text-[#DA7B93] hover:text-[#1C3334] focus:ring-2 focus:ring-[#DA7B93] shadow-[#DA7B93]/15'
+                      : 'bg-[#B83A5D] hover:bg-[#9E2B4B] border border-[#B83A5D] text-white shadow-rose-200'
+                  }`}
                 >
-                  Analyze
-                </button>
+                  <Zap className="w-4 h-4" />
+                  <span>Analyze</span>
+                </motion.button>
               </div>
+
+              {/* 1-Click Interactive Test Scenarios */}
+              <QuickTestLauncher onSelectSample={handleSelectSample} />
             </div>
           </form>
-        </div>
+        </motion.div>
 
-        {/* RIGHT COLUMN (lg:col-span-5): Decorative SVG Hero Animation */}
-        <div className="lg:col-span-5 flex items-center justify-center p-4">
-          <div className="relative w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] flex items-center justify-center select-none" aria-hidden="true">
-            <svg
-              viewBox="0 0 300 300"
-              className="w-full h-full overflow-visible"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#0E7490" stopOpacity="0.3" />
-                </linearGradient>
-              </defs>
-
-              {/* Concentric Ring 2: Outer (r=140) */}
-              <circle
-                cx="150"
-                cy="150"
-                r="135"
-                fill="none"
-                stroke="#1B2433"
-                strokeWidth="1.2"
-                strokeDasharray="4 6"
-                className="opacity-40"
-              />
-
-              {/* Concentric Ring 1: Inner (r=100) */}
-              <circle
-                cx="150"
-                cy="150"
-                r="95"
-                fill="none"
-                stroke="#1E3A4C"
-                strokeWidth="1.5"
-                className="opacity-60"
-              />
-
-              {/* Central Shield Shape */}
-              <g transform="translate(150, 145)">
-                <path
-                  d="M0 -42 C26 -42 42 -30 42 -6 C42 30 18 52 0 62 C-18 52 -42 30 -42 -6 C-42 -30 -26 -42 0 -42 Z"
-                  fill="url(#shieldGrad)"
-                  stroke="#22D3EE"
-                  strokeWidth="2.5"
-                  className="drop-shadow-[0_0_15px_rgba(34,211,238,0.25)]"
-                />
-                {/* Green Checkmark inside Shield */}
-                <path
-                  d="M-14 2 L-3 13 L15 -7"
-                  fill="none"
-                  stroke="#34D399"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </g>
-
-              {/* Green Dot 1: Moves into shield and fades out */}
-              <circle r="4" fill="#34D399" className="hero-svg-dot">
-                <animateMotion
-                  path="M 30,80 L 140,140"
-                  dur="3.2s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;0.9;0.9;0"
-                  dur="3.2s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-
-              {/* Green Dot 2: Moves into shield and fades out */}
-              <circle r="3.5" fill="#34D399" className="hero-svg-dot">
-                <animateMotion
-                  path="M 50,230 L 142,152"
-                  dur="3.8s"
-                  begin="1.2s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;1;0.8;0"
-                  dur="3.8s"
-                  begin="1.2s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-
-              {/* Red Dot 1: Stops at outer ring (r=135) and fades out */}
-              <circle r="4" fill="#FB7185" className="hero-svg-dot">
-                <animateMotion
-                  path="M 270,40 L 225,95"
-                  dur="2.8s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;1;1;0"
-                  dur="2.8s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-
-              {/* Red Dot 2: Stops at outer ring and fades out */}
-              <circle r="3.5" fill="#FB7185" className="hero-svg-dot">
-                <animateMotion
-                  path="M 260,250 L 220,205"
-                  dur="3.5s"
-                  begin="0.8s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;0.9;0.9;0"
-                  dur="3.5s"
-                  begin="0.8s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </svg>
-          </div>
-        </div>
+        {/* RIGHT COLUMN (lg:col-span-5): Cyber Threat Radar */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="lg:col-span-5 flex items-center justify-center lg:justify-end"
+        >
+          <RadarHero />
+        </motion.div>
       </div>
 
-      {/* Bottom Section: Three Cards (Email, SMS, Link check) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4">
-        {/* Email Card */}
-        <div className="bg-white/[0.04] border border-white/10 rounded-[16px] p-5 backdrop-blur-md flex flex-col justify-between space-y-4">
-          <div className="space-y-2">
-            <h3 className="text-base font-bold text-[#E6EDF5]">Email check</h3>
-            <p className="text-xs text-[#93A1B5] leading-relaxed">
-              Headers se spoofing pakdo: SPF, DKIM, DMARC.
-            </p>
+      {/* Live Cyber Intelligence & Telemetry Bar */}
+      <LiveTelemetry />
+
+      {/* Deep-Dive Inspection Engines Grid */}
+      <div className="space-y-4 pt-4">
+        <div className="flex items-center justify-between border-b border-[#376E6F]/30 pb-3">
+          <div className="flex items-center space-x-2">
+            <Shield className="w-4 h-4 text-[#DA7B93]" />
+            <h2 className="text-sm font-mono uppercase tracking-wider font-semibold text-[#F8FAFC]">
+              SPECIALIZED DEFENSE MODULES // INDIAN CYBER VECTORS
+            </h2>
           </div>
-          <div>
-            <Link
-              to="/email"
-              className="text-xs font-semibold text-[#22D3EE] hover:underline flex items-center space-x-1 focus:outline-none focus:ring-1 focus:ring-[#22D3EE] rounded w-fit"
-            >
-              <span>Open</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
+          <span className="text-xs font-mono text-[#B8C5D6]">4 Modules Available</span>
         </div>
 
-        {/* SMS Card */}
-        <div className="bg-white/[0.04] border border-white/10 rounded-[16px] p-5 backdrop-blur-md flex flex-col justify-between space-y-4">
-          <div className="space-y-2">
-            <h3 className="text-base font-bold text-[#E6EDF5]">SMS check</h3>
-            <p className="text-xs text-[#93A1B5] leading-relaxed">
-              KYC, FASTag, digital arrest jaise scam pehchano.
-            </p>
-          </div>
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* SMS / WhatsApp Module */}
+          <motion.div
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className="rounded-[16px] bg-[#1C3334]/80 border border-[#376E6F]/30 p-5 backdrop-blur-md flex flex-col justify-between space-y-4 group hover:border-[#DA7B93]/60 hover:shadow-lg hover:shadow-[#DA7B93]/10 transition-all"
+          >
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-[10px] bg-[#2E151B] border border-[#DA7B93]/40 flex items-center justify-center group-hover:border-[#DA7B93] transition-colors">
+                <MessageSquare className="w-5 h-5 text-[#DA7B93]" />
+              </div>
+              <h3 className="text-base font-bold text-[#F8FAFC] group-hover:text-[#DA7B93] transition-colors">
+                SMS & WhatsApp
+              </h3>
+              <p className="text-xs text-[#B8C5D6] leading-relaxed">
+                Indian scam pack: Fake KYC, FASTag blacklist, Digital arrest, electricity bill cut, and Hinglish urgency phrasing.
+              </p>
+            </div>
             <Link
               to="/sms"
-              className="text-xs font-semibold text-[#22D3EE] hover:underline flex items-center space-x-1 focus:outline-none focus:ring-1 focus:ring-[#22D3EE] rounded w-fit"
+              className="text-xs font-semibold text-[#DA7B93] flex items-center gap-1.5 group-hover:translate-x-1 transition-transform w-fit"
             >
-              <span>Open</span>
-              <span aria-hidden="true">→</span>
+              <span>Launch Scanner</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
-          </div>
-        </div>
+          </motion.div>
 
-        {/* Link Card */}
-        <div className="bg-white/[0.04] border border-white/10 rounded-[16px] p-5 backdrop-blur-md flex flex-col justify-between space-y-4">
-          <div className="space-y-2">
-            <h3 className="text-base font-bold text-[#E6EDF5]">Link check</h3>
-            <p className="text-xs text-[#93A1B5] leading-relaxed">
-              Short link ke peeche ka asli rasta dekho.
-            </p>
-          </div>
-          <div>
+          {/* URL Forensics Module */}
+          <motion.div
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className="rounded-[16px] bg-[#1C3334]/80 border border-[#376E6F]/30 p-5 backdrop-blur-md flex flex-col justify-between space-y-4 group hover:border-[#376E6F]/70 hover:shadow-lg hover:shadow-[#376E6F]/15 transition-all"
+          >
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-[10px] bg-[#1C3334] border border-[#376E6F]/60 flex items-center justify-center group-hover:border-[#376E6F] transition-colors">
+                <Link2 className="w-5 h-5 text-[#376E6F]" />
+              </div>
+              <h3 className="text-base font-bold text-[#F8FAFC] group-hover:text-[#376E6F] transition-colors">
+                Link Journey Forensics
+              </h3>
+              <p className="text-xs text-[#B8C5D6] leading-relaxed">
+                Recursive unshortener up to 5 hops, typosquatting Levenshtein distance, combosquatting, and RDAP domain age profiling.
+              </p>
+            </div>
             <Link
               to="/url"
-              className="text-xs font-semibold text-[#22D3EE] hover:underline flex items-center space-x-1 focus:outline-none focus:ring-1 focus:ring-[#22D3EE] rounded w-fit"
+              className="text-xs font-semibold text-[#376E6F] flex items-center gap-1.5 group-hover:translate-x-1 transition-transform w-fit"
             >
-              <span>Open</span>
-              <span aria-hidden="true">→</span>
+              <span>Inspect Link</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
-          </div>
+          </motion.div>
+
+          {/* Email Headers Module */}
+          <motion.div
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className="rounded-[16px] bg-[#1C3334]/80 border border-[#376E6F]/30 p-5 backdrop-blur-md flex flex-col justify-between space-y-4 group hover:border-[#DA7B93]/60 hover:shadow-lg hover:shadow-[#DA7B93]/10 transition-all"
+          >
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-[10px] bg-[#2E151B] border border-[#DA7B93]/30 flex items-center justify-center group-hover:border-[#DA7B93] transition-colors">
+                <Mail className="w-5 h-5 text-[#DA7B93]" />
+              </div>
+              <h3 className="text-base font-bold text-[#F8FAFC] group-hover:text-[#DA7B93] transition-colors">
+                Email Authentication
+              </h3>
+              <p className="text-xs text-[#B8C5D6] leading-relaxed">
+                Raw RFC 5322 header forensics: SPF, DKIM, DMARC validation, Display Name spoofing, and Free Webmail impersonation.
+              </p>
+            </div>
+            <Link
+              to="/email"
+              className="text-xs font-semibold text-[#DA7B93] flex items-center gap-1.5 group-hover:translate-x-1 transition-transform w-fit"
+            >
+              <span>Analyze Headers</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </motion.div>
+
+          {/* OSINT Footprint Module */}
+          <motion.div
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className="rounded-[16px] bg-[#1C3334]/80 border border-[#376E6F]/30 p-5 backdrop-blur-md flex flex-col justify-between space-y-4 group hover:border-[#2F4454] hover:shadow-lg transition-all"
+          >
+            <div className="space-y-3">
+              <div className="w-10 h-10 rounded-[10px] bg-[#2F4454] border border-[#376E6F]/40 flex items-center justify-center group-hover:border-[#DA7B93] transition-colors">
+                <Globe className="w-5 h-5 text-[#DA7B93]" />
+              </div>
+              <h3 className="text-base font-bold text-[#F8FAFC] group-hover:text-[#DA7B93] transition-colors">
+                Passive OSINT & Footprint
+              </h3>
+              <p className="text-xs text-[#B8C5D6] leading-relaxed">
+                Infrastructure reconnaissance: DNS, PTR reverse lookup, MX mail hygiene, disposable hosting check, and 12+ OSINT tools directory.
+              </p>
+            </div>
+            <Link
+              to="/footprint"
+              className="text-xs font-semibold text-[#DA7B93] flex items-center gap-1.5 group-hover:translate-x-1 transition-transform w-fit"
+            >
+              <span>Explore OSINT</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </motion.div>
         </div>
       </div>
     </div>

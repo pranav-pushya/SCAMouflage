@@ -14,7 +14,8 @@ RULE_WEIGHTS: Dict[str, int] = {
     "MANY_SUBDOMAINS": 10,
     "MANY_HYPHENS": 10,
     "LONG_URL": 5,
-    "SUSPICIOUS_TLD": 20,
+    "SUSPICIOUS_TLD": 40,
+    "UNCOMMON_OR_PSEUDO_TLD": 40,
     "NO_HTTPS": 5,
     "BRAND_LOOKALIKE": 55,
     "BRAND_IN_DOMAIN": 20,
@@ -31,7 +32,24 @@ RULE_WEIGHTS: Dict[str, int] = {
     "SUSPICIOUS_FILE_DOWNLOAD": 45,
 }
 
-# Suspicious TLDs commonly exploited for low-cost, throwaway phishing links & spam campaigns
+# Standard, established, high-reputation domain extensions
+# Based on classical ICANN categories, national registries, and general-purpose TLDs
+STANDARD_TLDS: Set[str] = {
+    # 1. Classical Generic TLDs (from domain types guide)
+    "com", "org", "net", "edu", "gov", "mil", "int", "coop", "jobs", "mobi", "aero", "museum",
+    # 2. Modern Business, Application & Tech Extensions (from domain types guide)
+    "co", "info", "biz", "tech", "app", "infra", "io", "dev", "ai", "me", "pro", "cloud",
+    # 3. India ccTLD and Official Sub-delegations
+    "in", "co.in", "net.in", "org.in", "gen.in", "firm.in", "ind.in",
+    "gov.in", "nic.in", "ac.in", "edu.in", "res.in", "mil.in",
+    # 4. Major Global Country-Code TLDs (High-reputation)
+    "us", "uk", "co.uk", "org.uk", "gov.uk", "ca", "au", "com.au", "de", "fr",
+    "jp", "co.jp", "sg", "com.sg", "ae", "eu", "ch", "nl", "se", "no", "nz",
+    "co.nz", "it", "es", "br", "com.br", "mx", "com.mx", "kr", "co.kr", "za", "co.za"
+}
+
+# Suspicious / High-Abuse TLDs commonly exploited for low-cost, throwaway phishing links & spam campaigns
+# High abuse rates documented by Spamhaus, APWG, and global CERTs
 SUSPICIOUS_TLDS: Set[str] = {
     "xyz", "top", "click", "live", "icu", "buzz", "shop", "vip",
     "work", "site", "online", "club", "pw", "cc", "fit", "rest",
@@ -39,7 +57,8 @@ SUSPICIOUS_TLDS: Set[str] = {
     "monster", "cfd", "beauty", "hair", "skin", "quest", "autos",
     "homes", "boats", "country", "stream", "date", "racing", "party",
     "trade", "science", "download", "accountant", "loan", "faith",
-    "cricket", "win"
+    "cricket", "win", "bid", "review", "space", "press", "host",
+    "website", "fun", "uno", "tokyo", "gdn", "mom", "ooo", "zip", "mov"
 }
 
 # Commonly observed URL shortener domains

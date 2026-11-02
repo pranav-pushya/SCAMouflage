@@ -41,28 +41,28 @@
 
 /* Dark Theme FAB */
 .ps-theme-dark .ps-fab-main-btn {
-  background: #0A111C !important;
-  color: #22D3EE !important;
-  border: 1.5px solid #1E3A4C !important;
+  background: #1C3334 !important;
+  color: #DA7B93 !important;
+  border: 1.5px solid rgba(55, 110, 111, 0.5) !important;
 }
 .ps-theme-dark .ps-fab-main-btn:hover {
-  background: #0F1A2A !important;
-  border-color: #22D3EE !important;
+  background: #2E151B !important;
+  border-color: #DA7B93 !important;
   transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.3) !important;
+  box-shadow: 0 8px 24px rgba(218, 123, 147, 0.35) !important;
 }
 
 /* Light Theme FAB */
 .ps-theme-light .ps-fab-main-btn {
   background: #FFFFFF !important;
-  color: #0284C7 !important;
-  border: 1.5px solid #CBD5E1 !important;
+  color: #B83A5D !important;
+  border: 1.5px solid #F4B8C7 !important;
 }
 .ps-theme-light .ps-fab-main-btn:hover {
-  background: #F8FAFC !important;
-  border-color: #0284C7 !important;
+  background: #FDF2F4 !important;
+  border-color: #B83A5D !important;
   transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25) !important;
+  box-shadow: 0 8px 24px rgba(184, 58, 93, 0.25) !important;
 }
 
 .ps-fab-shield-icon {
@@ -115,14 +115,14 @@
 }
 
 .ps-theme-dark .ps-modal-card {
-  background: #070B12 !important;
-  border: 1px solid #243247 !important;
-  color: #E6EDF5 !important;
+  background: #1C3334 !important;
+  border: 1px solid rgba(55, 110, 111, 0.5) !important;
+  color: #F8FAFC !important;
 }
 .ps-theme-light .ps-modal-card {
   background: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
-  color: #0F172A !important;
+  color: #1C3334 !important;
 }
 
 .ps-modal-header {
@@ -133,12 +133,12 @@
   border-bottom: 1px solid !important;
 }
 .ps-theme-dark .ps-modal-header {
-  background: #0A111C !important;
-  border-color: #1B2433 !important;
+  background: #152728 !important;
+  border-color: rgba(55, 110, 111, 0.3) !important;
 }
 .ps-theme-light .ps-modal-header {
-  background: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
+  background: #FDF2F4 !important;
+  border-color: #F4B8C7 !important;
 }
 
 .ps-modal-brand {
@@ -172,11 +172,11 @@
   text-align: center !important;
 }
 .ps-theme-dark .ps-stat-col {
-  background: #0A111C !important;
-  border: 1px solid #1B2433 !important;
+  background: #2E151B !important;
+  border: 1px solid rgba(55, 110, 111, 0.35) !important;
 }
 .ps-theme-light .ps-stat-col {
-  background: #F1F5F9 !important;
+  background: #F8FAFC !important;
   border: 1px solid #E2E8F0 !important;
 }
 
@@ -229,9 +229,14 @@
   font-family: monospace, monospace !important;
   padding: 2px 5px !important;
   border-radius: 4px !important;
-  background: #0F1A2A !important;
-  border: 1px solid #1E3A4C !important;
-  color: #22D3EE !important;
+  background: #2E151B !important;
+  border: 1px solid rgba(55, 110, 111, 0.4) !important;
+  color: #DA7B93 !important;
+}
+.ps-theme-light .ps-threat-type-badge {
+  background: #FDF2F4 !important;
+  border: 1px solid #F4B8C7 !important;
+  color: #B83A5D !important;
 }
 
 .ps-threat-name {
@@ -342,28 +347,28 @@
 
 /* Dark Theme Floating Button */
 #ps-floating-btn.ps-theme-dark .ps-trigger-btn {
-  background: #0A111C !important;
-  color: #22D3EE !important;
-  border: 1px solid #1E3A4C !important;
+  background: #152728 !important;
+  color: #DA7B93 !important;
+  border: 1px solid rgba(55, 110, 111, 0.45) !important;
 }
 #ps-floating-btn.ps-theme-dark .ps-trigger-btn:hover {
-  background: #0F1A2A !important;
-  border-color: #22D3EE !important;
+  background: #2E151B !important;
+  border-color: #DA7B93 !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 6px 18px rgba(34, 211, 238, 0.25) !important;
+  box-shadow: 0 6px 18px rgba(218, 123, 147, 0.3) !important;
 }
 
 /* Light Theme Floating Button */
 #ps-floating-btn.ps-theme-light .ps-trigger-btn {
   background: #FFFFFF !important;
-  color: #0284C7 !important;
+  color: #B83A5D !important;
   border: 1px solid #CBD5E1 !important;
 }
 #ps-floating-btn.ps-theme-light .ps-trigger-btn:hover {
-  background: #F8FAFC !important;
-  border-color: #0284C7 !important;
+  background: #FDF2F4 !important;
+  border-color: #B83A5D !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.2) !important;
+  box-shadow: 0 6px 18px rgba(184, 58, 93, 0.2) !important;
 }
 
 #ps-floating-btn .ps-icon {
@@ -384,14 +389,14 @@
 }
 
 #ps-inspector-card.ps-theme-dark {
-  background-color: #070B12 !important;
-  border: 1px solid #243247 !important;
-  color: #E6EDF5 !important;
+  background-color: #1C3334 !important;
+  border: 1px solid rgba(55, 110, 111, 0.5) !important;
+  color: #F8FAFC !important;
 }
 #ps-inspector-card.ps-theme-light {
   background-color: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
-  color: #0F172A !important;
+  color: #1C3334 !important;
 }
 
 .ps-card-header {
@@ -402,12 +407,12 @@
   border-bottom: 1px solid !important;
 }
 .ps-theme-dark .ps-card-header {
-  background-color: #0A111C !important;
-  border-color: #1B2433 !important;
+  background-color: #152728 !important;
+  border-color: rgba(55, 110, 111, 0.35) !important;
 }
 .ps-theme-light .ps-card-header {
-  background-color: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
+  background-color: #FDF2F4 !important;
+  border-color: #F4B8C7 !important;
 }
 
 .ps-card-brand {
@@ -421,8 +426,8 @@
   font-weight: 700 !important;
   letter-spacing: 1px !important;
 }
-.ps-theme-dark .ps-brand-title { color: #E6EDF5 !important; }
-.ps-theme-light .ps-brand-title { color: #0F172A !important; }
+.ps-theme-dark .ps-brand-title { color: #F8FAFC !important; }
+.ps-theme-light .ps-brand-title { color: #1C3334 !important; }
 
 .ps-badge-source {
   font-size: 10px !important;
@@ -431,13 +436,15 @@
   font-weight: 600 !important;
 }
 .ps-theme-dark .ps-badge-source {
-  background: #0F1A2A !important;
-  color: #22D3EE !important;
-  border: 1px solid #1E3A4C !important;
+  background: #2E151B !important;
+  color: #DA7B93 !important;
+  border: 1px solid rgba(218, 123, 147, 0.4) !important;
 }
 .ps-theme-light .ps-badge-source {
-  background: #E0F2FE !important;
-  color: #0284C7 !important;
+  background: #FDF2F4 !important;
+  color: #B83A5D !important;
+  border: 1px solid #F4B8C7 !important;
+}
   border: 1px solid #BAE6FD !important;
 }
 
@@ -565,7 +572,10 @@
   content: "→" !important;
   position: absolute !important;
   left: 0px !important;
-  color: #22D3EE !important;
+  color: #DA7B93 !important;
+}
+.ps-theme-light .ps-advice-list li::before {
+  color: #B83A5D !important;
 }
 .ps-theme-dark .ps-reasons-list li, .ps-theme-dark .ps-advice-list li { color: #CBD5E1 !important; }
 .ps-theme-light .ps-reasons-list li, .ps-theme-light .ps-advice-list li { color: #475569 !important; }
@@ -581,11 +591,12 @@
   border: 1px solid rgba(251, 191, 36, 0.25) !important;
   font-size: 11px !important;
 }
-.ps-theme-dark .ps-helpline-box { color: #E6EDF5 !important; }
-.ps-theme-light .ps-helpline-box { color: #0F172A !important; }
+.ps-theme-dark .ps-helpline-box { color: #F8FAFC !important; }
+.ps-theme-light .ps-helpline-box { color: #1C3334 !important; }
 .ps-hl-icon { font-size: 16px !important; }
 .ps-helpline-box strong { color: #F59E0B !important; }
-.ps-hl-sub a { color: #22D3EE !important; text-decoration: underline !important; }
+.ps-hl-sub a { color: #DA7B93 !important; text-decoration: underline !important; }
+.ps-theme-light .ps-hl-sub a { color: #B83A5D !important; }
 
 /* Footer Buttons */
 .ps-card-footer {
@@ -605,30 +616,30 @@
   text-align: center !important;
 }
 .ps-theme-dark .ps-btn-secondary {
-  background: #0A111C !important;
-  border: 1px solid #243247 !important;
-  color: #E6EDF5 !important;
+  background: #152728 !important;
+  border: 1px solid rgba(55, 110, 111, 0.45) !important;
+  color: #F8FAFC !important;
 }
-.ps-theme-dark .ps-btn-secondary:hover { background: #0F1A2A !important; border-color: #93A1B5 !important; }
+.ps-theme-dark .ps-btn-secondary:hover { background: #2E151B !important; border-color: #DA7B93 !important; }
 .ps-theme-dark .ps-btn-primary {
-  background: #0F1A2A !important;
-  border: 1px solid #1E3A4C !important;
-  color: #22D3EE !important;
+  background: #2E151B !important;
+  border: 1px solid rgba(218, 123, 147, 0.4) !important;
+  color: #DA7B93 !important;
 }
-.ps-theme-dark .ps-btn-primary:hover { background: #13243A !important; border-color: #22D3EE !important; }
+.ps-theme-dark .ps-btn-primary:hover { background: #376E6F !important; border-color: #376E6F !important; color: #FFFFFF !important; }
 
 .ps-theme-light .ps-btn-secondary {
-  background: #F1F5F9 !important;
+  background: #F8FAFC !important;
   border: 1px solid #CBD5E1 !important;
-  color: #334155 !important;
+  color: #1C3334 !important;
 }
-.ps-theme-light .ps-btn-secondary:hover { background: #E2E8F0 !important; }
+.ps-theme-light .ps-btn-secondary:hover { background: #F1F5F9 !important; }
 .ps-theme-light .ps-btn-primary {
-  background: #E0F2FE !important;
-  border: 1px solid #7DD3FC !important;
-  color: #0369A1 !important;
+  background: #B83A5D !important;
+  border: 1px solid #B83A5D !important;
+  color: #FFFFFF !important;
 }
-.ps-theme-light .ps-btn-primary:hover { background: #BAE6FD !important; }
+.ps-theme-light .ps-btn-primary:hover { background: #9F2D4C !important; }
 
 /* ================= 6. URL THREAT BANNER ================= */
 #ps-url-banner {

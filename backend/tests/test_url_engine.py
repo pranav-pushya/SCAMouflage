@@ -503,3 +503,38 @@ def test_slow_rdap_capped_by_network_budget():
     assert duration < 3.5, f"analyze_url took {duration:.2f}s, exceeding 3.5s budget"
     assert result["meta"]["domain_age_days"] is None
     assert isinstance(result["score"], int)
+
+
+# ---------------------------------------------------------------------------
+# 14. Suspicious & Uncommon TLD accuracy (.xyz, .abc, disposable TLDs)
+# ---------------------------------------------------------------------------
+
+def test_suspicious_and_uncommon_tld_accuracy():
+    """Verify .xyz and .abc domains are accurately flagged as medium-to-high risk, never 5-20%."""
+    # .xyz (disposable / high-abuse TLD)
+    res_xyz = analyze_url("http://test.xyz")
+    assert res_xyz["score"] >= 40
+    assert any(f["code"] == "SUSPICIOUS_TLD" for f in res_xyz["flags"])
+
+    res_xyz_https = analyze_url("https://test.xyz")
+    assert res_xyz_https["score"] >= 40
+    assert any(f["code"] == "SUSPICIOUS_TLD" for f in res_xyz_https["flags"])
+
+    # .abc (uncommon / non-standard TLD)
+    res_abc = analyze_url("http://test.abc")
+    assert res_abc["score"] >= 40
+    assert any(f["code"] == "UNCOMMON_OR_PSEUDO_TLD" for f in res_abc["flags"])
+
+    res_abc_https = analyze_url("https://test.abc")
+    assert res_abc_https["score"] >= 40
+    assert any(f["code"] == "UNCOMMON_OR_PSEUDO_TLD" for f in res_abc_https["flags"])
+
+    # Brand on .xyz or .abc upgrades to BRAND_LOOKALIKE and scores high risk (>= 90)
+    res_sbi_xyz = analyze_url("http://sbi.xyz")
+    assert res_sbi_xyz["score"] >= 90
+    assert any(f["code"] == "BRAND_LOOKALIKE" for f in res_sbi_xyz["flags"])
+
+    res_sbi_abc = analyze_url("http://sbi.abc")
+    assert res_sbi_abc["score"] >= 90
+    assert any(f["code"] == "BRAND_LOOKALIKE" for f in res_sbi_abc["flags"])
+
